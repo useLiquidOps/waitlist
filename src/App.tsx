@@ -1,11 +1,14 @@
-import { css } from "@linaria/core"
-import { styled } from "@linaria/react"
-import Button from "./Button"
-import Card from "./Card"
-import Avatars from "./Avatars"
-import Input from "./Input"
+import { useConnection } from "@arweave-wallet-kit-beta/react";
+import { styled } from "@linaria/react";
+import { css } from "@linaria/core";
+import Avatars from "./Avatars";
+import Button from "./Button";
+import Input from "./Input";
+import Card from "./Card";
 
 export default function App() {
+  const { connect, connected } = useConnection();
+
   return (
     <Wrapper>
       <div>
@@ -29,8 +32,8 @@ export default function App() {
             Join Sam Williams, Tate Berenbaum and more...
           </Small>
           <Input />
-          <JoinButton>
-            Connect
+          <JoinButton onClick={connect}>
+            {connected ? "Sign up" : "Connect"}
           </JoinButton>
         </JoinContent>
       </Card>
@@ -61,14 +64,23 @@ const Title = styled.h1`
   margin: 0 0 .4rem;
   color: #000;
   font-weight: 700;
+
+  @media screen and (max-width: 720px) {
+    font-size: 4rem;
+    line-height: 1.1em;
+  }
 `;
 
 const Subtitle = styled.h2`
-  font-size: 1.8rem;
+  font-size: 1.65rem;
   text-align: center;
   margin: 0;
   color: #B5B5B5;
   font-weight: 500;
+
+  @media screen and (max-width: 720px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const SectionTitle = styled.h3`

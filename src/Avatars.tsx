@@ -20,8 +20,8 @@ const Wrapper = styled.div`
 
 const Avatar = styled.img`
   display: block;
-  width: 3rem;
-  height: 3rem;
+  width: 2.8rem;
+  height: 2.8rem;
   border-radius: 100%;
   object-fit: cover;
   user-select: none;

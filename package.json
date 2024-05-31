@@ -5,13 +5,23 @@
     "build": "tsc && vite build"
   },
   "dependencies": {
+    "@arweave-wallet-kit-beta/arconnect-strategy": "^0.0.1-beta.5",
+    "@arweave-wallet-kit-beta/browser-wallet-strategy": "^0.0.1-beta.4",
+    "@arweave-wallet-kit-beta/core": "^0.0.1-beta.4",
+    "@arweave-wallet-kit-beta/othent-strategy": "^0.0.1-beta.12",
+    "@arweave-wallet-kit-beta/react": "^0.0.1-beta.4",
+    "@arweave-wallet-kit/styles": "^0.0.1-beta.3",
     "@babel/runtime": "^7.24.6",
     "@linaria/core": "^6.2.0",
     "@linaria/react": "^6.2.1",
+    "@othent/kms": "^1.0.8",
     "@untitled-ui/icons-react": "^0.1.2",
     "@wyw-in-js/babel-preset": "^0.5.3",
+    "arweave": "^1.15.1",
+    "arweave-wallet-connector": "^1.0.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "warp-arbundles": "^1.0.4"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.24.6",
