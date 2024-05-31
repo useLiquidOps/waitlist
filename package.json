@@ -5,8 +5,10 @@
     "build": "tsc && vite build"
   },
   "dependencies": {
+    "@babel/runtime": "^7.24.6",
     "@linaria/core": "^6.2.0",
     "@linaria/react": "^6.2.1",
+    "@untitled-ui/icons-react": "^0.1.2",
     "@wyw-in-js/babel-preset": "^0.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

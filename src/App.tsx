@@ -3,6 +3,7 @@ import { styled } from "@linaria/react"
 import Button from "./Button"
 import Card from "./Card"
 import Avatars from "./Avatars"
+import Input from "./Input"
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Small>
             Join Sam Williams, Tate Berenbaum and more...
           </Small>
+          <Input />
           <JoinButton>
             Connect
           </JoinButton>
@@ -91,10 +93,11 @@ const Paragraph = styled.p`
 
 const Small = styled(Paragraph)`
   font-size: .75rem;
+  margin-bottom: 1.5rem;
 `;
 
 const JoinButton = styled(Button)`
-  margin: 1rem auto 0;
+  margin: 1.5rem auto 0;
 `;
 
 export const globals = css`
