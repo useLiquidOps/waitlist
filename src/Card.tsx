@@ -8,6 +8,10 @@ const Card = styled.section`
   height: max-content;
   background-color: #fff;
 
+  @media screen and (max-width: 1250px) {
+    width: 70%;
+  }
+
   @media screen and (max-width: 720px) {
     width: 100%;
   }

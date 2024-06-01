@@ -1,43 +1,47 @@
 import { useConnection } from "@arweave-wallet-kit-beta/react";
 import { styled } from "@linaria/react";
 import { css } from "@linaria/core";
-import Avatars from "./Avatars";
 import Button from "./Button";
 import Input from "./Input";
 import Card from "./Card";
+import Nav from "./Nav"
+import Spacer from "./Spacer"
 
 export default function App() {
   const { connect, connected } = useConnection();
 
   return (
-    <Wrapper>
-      <div>
-        <Title>
-          Lending on Arweave
-        </Title>
-        <Subtitle>
-          The very first lending protocol built on the ao supercomputer
-        </Subtitle>
-      </div>
-      <Card>
-        <JoinContent>
-          <SectionTitle>
-            Join the waitlist!
-          </SectionTitle>
+    <>
+      <Nav />
+      <Wrapper>
+        <div>
+          <Title>
+            Name
+          </Title>
+          <Spacer y={0.4} />
           <Paragraph>
-            Subscribe to our newsletter to know when we are ready. Don't worry, we won't spam you and that's guaranteed!
+            Name is the very first lending protocol on Arweave and the AO computer
           </Paragraph>
-          <Avatars />
-          <Small>
-            Join Sam Williams, Tate Berenbaum and more...
-          </Small>
-          <Input />
-          <JoinButton onClick={connect}>
-            {connected ? "Sign up" : "Connect"}
-          </JoinButton>
-        </JoinContent>
-      </Card>
-    </Wrapper>
+        </div>
+        <Card>
+          <JoinContent>
+            <SectionTitle>
+              Join the waitlist!
+            </SectionTitle>
+            <Spacer y={0.6} />
+            <Paragraph>
+              Subscribe to our newsletter to know when we are ready. Don't worry, we won't spam you and that's guaranteed!
+            </Paragraph>
+            <Spacer y={1.5} />
+            <Input />
+            <Spacer y={1.5} />
+            <Button onClick={connect}>
+              {connected ? "Sign up" : "Connect"}
+            </Button>
+          </JoinContent>
+        </Card>
+      </Wrapper>
+    </>
   );
 }
 
@@ -46,7 +50,6 @@ const Wrapper = styled.main`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 100vh;
   gap: 4rem;
 
   @media screen and (max-width: 720px) {
@@ -56,37 +59,24 @@ const Wrapper = styled.main`
 
 const JoinContent = styled.div`
   padding: 2rem;
+
+  ${Button} {
+    margin: 0 auto;
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 5.5rem;
-  text-align: center;
-  margin: 0 0 .4rem;
-  color: #000;
-  font-weight: 700;
-
-  @media screen and (max-width: 720px) {
-    font-size: 4rem;
-    line-height: 1.1em;
-  }
-`;
-
-const Subtitle = styled.h2`
-  font-size: 1.65rem;
+  font-size: 3.4rem;
   text-align: center;
   margin: 0;
-  color: #B5B5B5;
-  font-weight: 500;
-
-  @media screen and (max-width: 720px) {
-    font-size: 1.4rem;
-  }
+  color: #000;
+  font-weight: 700;
 `;
 
 const SectionTitle = styled.h3`
   font-size: 2.1rem;
   text-align: center;
-  margin: 0 0 .6rem;
+  margin: 0;
   color: #000;
   font-weight: 600;
 `;
@@ -96,20 +86,15 @@ const Paragraph = styled.p`
   color: #B5B5B5;
   width: 30vw;
   line-height: 1.45em;
-  margin: 0;
+  margin: 0 auto;
+
+  @media screen and (max-width: 1250px) {
+    width: 70%;
+  }
 
   @media screen and (max-width: 720px) {
     width: auto;
   }
-`;
-
-const Small = styled(Paragraph)`
-  font-size: .75rem;
-  margin-bottom: 1.5rem;
-`;
-
-const JoinButton = styled(Button)`
-  margin: 1.5rem auto 0;
 `;
 
 export const globals = css`
