@@ -1,16 +1,19 @@
-import { styled } from "@linaria/react"
+import { styled } from "@linaria/react";
+import { Link } from "wouter";
 
 export default function Nav() {
   return (
     <Wrapper>
-      <Icon src="/vite.svg" draggable={false} />
+      <Link href="/">
+        <Icon src="/vite.svg" draggable={false} />
+      </Link>
       <Menu>
-        <Link>
+        <Link href="/blog">
           Blog
         </Link>
-        <Link>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferer">
           Twitter
-        </Link>
+        </a>
       </Menu>
     </Wrapper>
   );
@@ -22,6 +25,19 @@ const Wrapper = styled.header`
   justify-content: space-between;
   padding: 1.4rem 4.5rem;
   margin-bottom: 2.6rem;
+
+  a {
+    font-size: .95rem;
+    font-weight: 500;
+    color: #404040;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all .17s ease;
+
+    &:hover {
+      opacity: .75;
+    }
+  }
 
   @media screen and (max-width: 720px) {
     padding: 1.4rem 10vw;
@@ -39,17 +55,4 @@ const Menu = styled.nav`
   display: flex;
   align-items: center;
   gap: 4rem;
-`;
-
-const Link = styled.a`
-  font-size: .95rem;
-  font-weight: 500;
-  color: #404040;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all .17s ease;
-
-  &:hover {
-    opacity: .75;
-  }
 `;

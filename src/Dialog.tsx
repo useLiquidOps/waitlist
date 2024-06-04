@@ -4,6 +4,7 @@ import { styled } from "@linaria/react";
 import { useState } from "react";
 import Spacer from "./Spacer";
 import Button from "./Button";
+import { Link } from "wouter"
 
 export default function Dialog() {
   const [shown, setShown] = useState(true);
@@ -29,9 +30,11 @@ export default function Dialog() {
             Come join us at one of the events, we'd love to talk to you about our project! 
           </Text>
           <Spacer y={1.15} />
-          <Button color="255, 255, 255">
-            Find us!
-          </Button>
+          <Link href="/berlin">
+            <Button color="255, 255, 255">
+              Find us!
+            </Button>
+          </Link>
         </Wrapper>
       )}
     </AnimatePresence>
@@ -60,6 +63,10 @@ const Wrapper = styled(motion.section)`
   *::selection {
     background-color: rgba(255, 255, 255, .2);
     color: #fff;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   ${Button} {
