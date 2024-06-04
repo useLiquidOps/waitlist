@@ -14,7 +14,7 @@
     "@babel/runtime": "^7.24.6",
     "@linaria/core": "^6.2.0",
     "@linaria/react": "^6.2.1",
-    "@othent/kms": "^1.0.8",
+    "@othent/kms": "^1.0.12",
     "@untitled-ui/icons-react": "^0.1.2",
     "@wyw-in-js/babel-preset": "^0.5.3",
     "arweave": "^1.15.1",

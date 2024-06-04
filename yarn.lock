@@ -664,7 +664,7 @@
     hey-listen "^1.0.8"
     tslib "^2.3.1"
 
-"@othent/kms@^1.0.8":
+"@othent/kms@^1.0.12":
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@othent/kms/-/kms-1.0.12.tgz#6cbe6498fcc56eda2495c1704415b828536d1dd3"
   integrity sha512-0T4DSqjEI9Lh0642Of/cGEvl2bx80ZsIIKJoHijAup0So2/o0rfirkxttmWfHOySWxLJ1PEwzoC+iflF5MFPzg==

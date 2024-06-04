@@ -1,4 +1,4 @@
-import { useActiveAddress, useConnection, usePublicKey } from "@arweave-wallet-kit-beta/react";
+import { useActiveAddress, useConnection, usePublicKey, useStrategy } from "@arweave-wallet-kit-beta/react";
 import { Paragraph, SectionTitle, Title } from "./Text";
 import { styled } from "@linaria/react";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ export default function Home() {
   const address = useActiveAddress();
   const publicKey = usePublicKey();
   const [email, setEmail] = useState<string | undefined>();
+  const strategy = useStrategy();
 
   async function subscribe() {
     if (!connected) await connect();
@@ -35,7 +36,8 @@ export default function Home() {
             email,
             owner: publicKey,
             signature: Array.from(signature),
-            walletAddress: address
+            walletAddress: address,
+            mode: strategy
           })
         }
       )
@@ -111,7 +113,7 @@ export default function Home() {
               <th>AR Balance</th>
             </tr>
             {users.map((p, i) => (
-              <tr>
+              <tr key={i}>
                 <td>{i + 1}.</td>
                 <td>{formatAddress(p.address, 9)}</td>
                 <td>$1,245,555 USD</td>
