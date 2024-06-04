@@ -1,7 +1,7 @@
-import { useActiveAddress, useConnection } from "@arweave-wallet-kit-beta/react";
+import { useActiveAddress, useConnection, usePublicKey } from "@arweave-wallet-kit-beta/react";
 import { Paragraph, SectionTitle, Title } from "./Text";
 import { styled } from "@linaria/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Wrapper from "./Wrapper";
 import Spacer from "./Spacer";
 import Dialog from "./Dialog";
@@ -12,6 +12,7 @@ import Card from "./Card";
 export default function Home() {
   const { connect, connected } = useConnection();
   const address = useActiveAddress();
+  const publicKey = usePublicKey();
   const [email, setEmail] = useState<string | undefined>();
 
   async function subscribe() {
@@ -22,8 +23,38 @@ export default function Home() {
       new TextEncoder().encode(address)
     );
 
-    // TODO: send data
+    const res = await (
+      await fetch(
+        `https://waitlist-server.lorimer.pro/record-address`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            owner: publicKey,
+            signature: Array.from(signature),
+            walletAddress: address
+          })
+        }
+      )
+    ).json();
+
+    console.log(res);
   }
+
+  const [users, setUsers] = useState<{ address: string; balance: number; }[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await (
+        await fetch("https://waitlist-server.lorimer.pro/get-address-list")
+      ).json();
+
+      setUsers(res);
+    })();
+  }, []);
 
   return (
     <>
@@ -79,12 +110,12 @@ export default function Home() {
               <th>USD Balance</th>
               <th>AR Balance</th>
             </tr>
-            {new Array(100).fill("").map((_, i) => (
+            {users.map((p, i) => (
               <tr>
                 <td>{i + 1}.</td>
-                <td>ljvCPN3X...-6Iho8U</td>
+                <td>{formatAddress(p.address, 9)}</td>
                 <td>$1,245,555 USD</td>
-                <td>23,565.55 AR</td>
+                <td>{p.balance.toLocaleString(undefined, { maximumFractionDigits: 2 })} AR</td>
               </tr>
             ))}
           </Table>
@@ -179,3 +210,11 @@ const Table = styled.table`
     }
   }
 `;
+
+function formatAddress(address: string, count = 13) {
+  return (
+    address.substring(0, count) +
+    "..." +
+    address.substring(address.length - count, address.length)
+  );
+}

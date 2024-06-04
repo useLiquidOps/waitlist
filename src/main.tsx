@@ -12,7 +12,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         strategies: [new ArConnectStrategy(), new BrowserWalletStrategy()],
         permissions: [
           "ACCESS_ADDRESS",
-          "SIGNATURE"
+          "SIGNATURE",
+          "ACCESS_PUBLIC_KEY"
         ],
         ensurePermissions: true
       }}
