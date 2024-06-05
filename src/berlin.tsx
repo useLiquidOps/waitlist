@@ -48,6 +48,13 @@ export default function Berlin() {
         </ProfileCard>
         <Photo src="/marton.jpeg" alt="Marton" draggable={false} />
       </RightProfile>
+      <Spacer y={.01} />
+      <PhotoDump>
+        <MainPhoto src="/main.jpeg" alt="Lorimer & Marton in Virginia" draggable={false} />
+        <LeftPhoto src="/empirestate.jpeg" alt="Lorimer & Marton at the top of the Empire State building" draggable={false} />
+        <RightPhoto src="/london.jpeg" alt="Lorimer & Marton in London" draggable={false} />        
+      </PhotoDump>
+      <Spacer y={2} />
     </Wrapper>
   );
 }
@@ -56,14 +63,13 @@ const Profile = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 3rem;
-  width: max-content;
   margin-right: auto;
   padding: 0 10vw;
-`;
 
-const RightProfile = styled(Profile)`
-  margin-right: unset;
-  margin-left: auto;
+  @media screen and (max-width: 720px) {
+    flex-direction: column;
+    padding: 0;
+  }
 `;
 
 const Photo = styled.img`
@@ -72,6 +78,19 @@ const Photo = styled.img`
   user-select: none;
   object-fit: cover;
   border-radius: 2rem;
+`;
+
+const RightProfile = styled(Profile)`
+  margin-right: unset;
+  margin-left: auto;
+
+  @media screen and (max-width: 720px) {
+    flex-direction: column-reverse;
+
+    ${Photo} {
+      margin-left: auto;
+    }
+  }
 `;
 
 const ProfileCard = styled(Card)`
@@ -83,9 +102,59 @@ const ProfileCard = styled(Card)`
     b {
       color: #000;
     }
+
+    @media screen and (max-width: 1250px) {
+      width: 100%;
+    }
+
+    @media screen and (max-width: 720px) {
+      width: 100%;
+    }
   }
 
   ${Paragraph} {
     text-align: justify;
+  }
+
+  @media screen and (max-width: 720px) {
+    width: calc(100% - 4rem);
+  }
+`;
+
+const PhotoDump = styled.div`
+  position: relative;
+`;
+
+const MainPhoto = styled.img`
+  user-select: none;
+  width: 100%;
+  border-radius: 2rem;
+  z-index: 1;
+`;
+
+const LeftPhoto = styled(MainPhoto)`
+  position: absolute;
+  left: -20%;
+  top: 32%;
+  width: 46%;
+  z-index: 3;
+
+  @media screen and (max-width: 720px) {
+    top: 50%;
+    width: 38%;
+    left: -10%;
+  }
+`;
+
+const RightPhoto = styled(MainPhoto)`
+  position: absolute;
+  top: 10%;
+  right: -20%;
+  width: 40%;
+  z-index: 2;
+
+  @media screen and (max-width: 720px) {
+    right: -11%;
+    top: -10%;
   }
 `;

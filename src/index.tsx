@@ -105,7 +105,7 @@ export default function Home() {
           <Paragraph>
             Subscribe to our newsletter to know when we are ready. Don't worry, we won't spam you and that's guaranteed!
           </Paragraph>
-          {(joined && (
+          {(!joined && (
             <>
               <Spacer y={1.5} />
               <Input
