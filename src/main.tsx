@@ -10,7 +10,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ArweaveWalletKit
       config={{
-        strategies: [new ArConnectStrategy(), new BrowserWalletStrategy(), new OthentStrategy()],
+        strategies: [new ArConnectStrategy(), new OthentStrategy(), new BrowserWalletStrategy()],
         permissions: [
           "ACCESS_ADDRESS",
           "SIGNATURE",
@@ -22,5 +22,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     >
       <App />
     </ArweaveWalletKit>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

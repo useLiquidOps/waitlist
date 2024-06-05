@@ -1,7 +1,8 @@
 import { useActiveAddress, useConnection, usePublicKey, useStrategy } from "@arweave-wallet-kit-beta/react";
 import { Paragraph, SectionTitle, Title } from "./Text";
-import { styled } from "@linaria/react";
 import { useEffect, useState } from "react";
+import AnimatedCheck from "./AnimatedCheck";
+import { styled } from "@linaria/react";
 import Wrapper from "./Wrapper";
 import Spacer from "./Spacer";
 import Dialog from "./Dialog";
@@ -18,7 +19,7 @@ export default function Home() {
 
   async function subscribe() {
     if (!connected) await connect();
-    
+
     // @ts-expect-error
     const signature = await window.arweaveWallet.signMessage(
       new TextEncoder().encode(address)
@@ -58,6 +59,8 @@ export default function Home() {
     })();
   }, []);
 
+  const [joined, setJoined] = useState(false);
+
   return (
     <>
       <Wrapper>
@@ -78,15 +81,28 @@ export default function Home() {
           <Paragraph>
             Subscribe to our newsletter to know when we are ready. Don't worry, we won't spam you and that's guaranteed!
           </Paragraph>
-          <Spacer y={1.5} />
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-          />
-          <Spacer y={1.5} />
-          <Button onClick={subscribe}>
-            {connected ? "Sign up" : "Connect"}
-          </Button>
+          {(!joined && (
+            <>
+              <Spacer y={1.5} />
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.currentTarget.value)}
+              />
+              <Spacer y={1.5} />
+              <Button onClick={subscribe}>
+                {connected ? "Sign up" : "Connect"}
+              </Button>
+            </>
+          )) || (
+            <>
+              <Spacer y={1.5} />
+              <AnimatedCheck />
+              <Spacer y={.7} />
+              <Paragraph>
+                You've joined successfully! See you soon!
+              </Paragraph>
+            </>
+          )}
         </Form>
         <Spacer y={.01} />
         <Leaderboard>
