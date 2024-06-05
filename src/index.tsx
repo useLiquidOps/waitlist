@@ -227,7 +227,11 @@ export default function Home() {
                   key={i}
                 >
                   <td>{i + 1}.</td>
-                  <td>{formatAddress(p.address, 9)}</td>
+                  <td>
+                    <a href={`https://viewblock.io/arweave/address/${p.address}`} target="_blank" rel="noopener noreferrer">
+                      {formatAddress(p.address, 9)}
+                    </a>
+                  </td>
                   <td>
                     {(p.balance * arPrice).toLocaleString(undefined, {
                       style: "currency",
@@ -307,6 +311,7 @@ const Table = styled.table`
 
   tr {
     border-bottom: 1px solid #eaecf0;
+    transition: all .17s ease;
 
     &:last-child {
       border-bottom: 0;
@@ -323,12 +328,21 @@ const Table = styled.table`
       &:nth-child(3), &:nth-child(4) {
         text-align: right;
       }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
     }
 
     th {
       font-weight: 400;
       color: #B5B5B5;
       padding-top: 0;
+    }
+
+    &:not(:first-child):hover {
+      opacity: .6 !important;
     }
   }
 `;
