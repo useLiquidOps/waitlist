@@ -107,15 +107,15 @@ export default function Home() {
     }
 
     if (!connected) await connect();
-    let signature: Uint8Array;
+    let signature: number[];
     const data = new TextEncoder().encode(address);
 
     if (strategy === "othent") {
-      signature = new Uint8Array(await signMessage(data));
+      signature = await signMessage(data, { hashAlgorithm: "SHA-256" });
     } else {
-      // @ts-expect-error
-      signature = await window.arweaveWallet.signMessage(
-        data
+      signature = Array.from(
+        // @ts-expect-error
+        await window.arweaveWallet.signMessage(data)
       );
     }
 
@@ -130,7 +130,7 @@ export default function Home() {
           body: JSON.stringify({
             email,
             owner: publicKey,
-            signature: Array.from(signature),
+            signature,
             walletAddress: address,
             mode: strategy
           })
