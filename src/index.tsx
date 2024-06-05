@@ -1,8 +1,9 @@
-import { useActiveAddress, useConnection, usePublicKey, useStrategy } from "@arweave-wallet-kit-beta/react";
+import { useActiveAddress, useStrategy, useConnection, usePublicKey } from "@arweave-wallet-kit-beta/react";
 import { Paragraph, SectionTitle, Title } from "./Text";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import AnimatedCheck from "./AnimatedCheck";
+import { signMessage } from "@othent/kms";
 import { styled } from "@linaria/react";
 import Wrapper from "./Wrapper";
 import Spacer from "./Spacer";
@@ -12,7 +13,7 @@ import Input from "./Input";
 import Card from "./Card";
 
 export default function Home() {
-  const { connect, connected } = useConnection();
+  const { connect, connected, disconnect } = useConnection();
   const address = useActiveAddress();
   const publicKey = usePublicKey();
   const [email, setEmail] = useState<string | undefined>();
@@ -96,7 +97,7 @@ export default function Home() {
     })();
   }, [address]);
 
-  const [emailStatus, setEmailStatus] = useState<"error" | undefined>()
+  const [emailStatus, setEmailStatus] = useState<"error" | undefined>();
 
   async function subscribe() {
     if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
@@ -106,11 +107,17 @@ export default function Home() {
     }
 
     if (!connected) await connect();
+    let signature: Uint8Array;
+    const data = new TextEncoder().encode(address);
 
-    // @ts-expect-error
-    const signature = await window.arweaveWallet.signMessage(
-      new TextEncoder().encode(address)
-    );
+    if (strategy === "othent") {
+      signature = new Uint8Array(await signMessage(data));
+    } else {
+      // @ts-expect-error
+      signature = await window.arweaveWallet.signMessage(
+        data
+      );
+    }
 
     const res = await (
       await fetch(

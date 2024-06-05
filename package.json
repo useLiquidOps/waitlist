@@ -9,7 +9,7 @@
     "@arweave-wallet-kit-beta/browser-wallet-strategy": "^0.0.1-beta.4",
     "@arweave-wallet-kit-beta/core": "^0.0.1-beta.4",
     "@arweave-wallet-kit-beta/othent-strategy": "^0.0.1-beta.12",
-    "@arweave-wallet-kit-beta/react": "^0.0.1-beta.4",
+    "@arweave-wallet-kit-beta/react": "^0.0.1-beta.12",
     "@arweave-wallet-kit/styles": "^0.0.1-beta.3",
     "@babel/runtime": "^7.24.6",
     "@linaria/core": "^6.2.0",

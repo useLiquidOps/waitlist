@@ -32,10 +32,10 @@
   dependencies:
     jwt-decode "^4.0.0"
 
-"@arweave-wallet-kit-beta/react@^0.0.1-beta.4":
-  version "0.0.1-beta.10"
-  resolved "https://registry.yarnpkg.com/@arweave-wallet-kit-beta/react/-/react-0.0.1-beta.10.tgz#439fcdc3b2cccac91b2f712d90c1e7e79a15ed2e"
-  integrity sha512-L0+77um/aC5udHdFWBPeo2Mshd0vDQwKEw277lkUpKFQfoCLRXYNsDMkai3BOCDhsRx3dECkHfayZSDOpS5Q5g==
+"@arweave-wallet-kit-beta/react@^0.0.1-beta.12":
+  version "0.0.1-beta.12"
+  resolved "https://registry.yarnpkg.com/@arweave-wallet-kit-beta/react/-/react-0.0.1-beta.12.tgz#7eb1b7af39eb4040a48cc2a6e61f7d5411abca0a"
+  integrity sha512-H5RbvMUmnqfD5KwlWeFXtHDsJpB8zbq55ciY0YKFB9k1bJXlCDp8uizQootm2d4U6m2Dxut2QfYU1wIqcUjJpA==
   dependencies:
     "@callstack/react-theme-provider" "^3.0.8"
     "@iconicicons/react" "^1.5.1"
