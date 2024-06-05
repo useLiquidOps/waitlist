@@ -2,7 +2,7 @@ import { HTMLProps, useEffect, useState } from "react";
 import { Mail01 } from "@untitled-ui/icons-react";
 import { styled } from "@linaria/react";
 
-export default function Input({ value, onChange, ...props }: HTMLProps<HTMLInputElement>) {
+export default function Input({ value, onChange, status, onEnter, ...props }: HTMLProps<HTMLInputElement> & Props) {
   const [val, setVal] = useState<string | undefined>();
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export default function Input({ value, onChange, ...props }: HTMLProps<HTMLInput
   }, [value]);
 
   return (
-    <Wrapper>
+    <Wrapper error={status == "error"}>
       <Content>
         <Label hasContent={typeof val !== "undefined" && val !== ""}>
           Your email
@@ -24,6 +24,10 @@ export default function Input({ value, onChange, ...props }: HTMLProps<HTMLInput
         onChange={(e) => {
           setVal(e.target.value);
           if (onChange) onChange(e);
+        }}
+        onKeyDown={(e) => {
+          if (e.key !== "Enter" || !onEnter) return;
+          onEnter();
         }}
         {...props as any}
       />
@@ -43,15 +47,16 @@ const Label = styled.p<{ hasContent: boolean; }>`
   transition: all .17s ease;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ error: boolean; }>`
   position: relative;
   background-color: #F8F8F8;
   border-radius: 17px;
   overflow: hidden;
   transition: all .17s ease;
+  box-shadow: ${props => props.error ? "0 0 0 2px rgb(191, 0, 0)" : "none"};
 
   &:focus-within {
-    box-shadow: 0 0 0 2px rgb(var(--theme-color));
+    box-shadow: 0 0 0 2px rgb(${props => props.error ? "191, 0, 0" : "var(--theme-color)"});
 
     ${Label} {
       font-size: .6rem;
@@ -94,3 +99,8 @@ const Icon = styled(Mail01)`
   height: 1.5rem;
   transform: translateY(-50%);
 `;
+
+interface Props {
+  status?: "error";
+  onEnter?: () => unknown;
+}

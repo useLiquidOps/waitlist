@@ -18,7 +18,12 @@ export default function Home() {
   const [email, setEmail] = useState<string | undefined>();
   const strategy = useStrategy();
 
+  const [emailStatus, setEmailStatus] = useState<"error" | undefined>()
+
   async function subscribe() {
+    if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))
+      return setEmailStatus("error");
+
     if (!connected) await connect();
 
     // @ts-expect-error
@@ -111,6 +116,8 @@ export default function Home() {
               <Input
                 value={email}
                 onChange={(e) => setEmail(e.currentTarget.value)}
+                status={emailStatus}
+                onEnter={subscribe}
               />
               <Spacer y={1.5} />
               <Button onClick={subscribe}>
