@@ -18,44 +18,6 @@ export default function Home() {
   const [email, setEmail] = useState<string | undefined>();
   const strategy = useStrategy();
 
-  const [emailStatus, setEmailStatus] = useState<"error" | undefined>()
-
-  async function subscribe() {
-    if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-      return setEmailStatus("error");
-    } else if (emailStatus === "error") {
-      setEmailStatus(undefined);
-    }
-
-    if (!connected) await connect();
-
-    // @ts-expect-error
-    const signature = await window.arweaveWallet.signMessage(
-      new TextEncoder().encode(address)
-    );
-
-    const res = await (
-      await fetch(
-        `https://waitlist-server.lorimer.pro/record-address`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email,
-            owner: publicKey,
-            signature: Array.from(signature),
-            walletAddress: address,
-            mode: strategy
-          })
-        }
-      )
-    ).json();
-
-    console.log(res);
-  }
-
   const [users, setUsers] = useState<{ address: string; balance: number; }[]>([]);
 
   useEffect(() => {
@@ -108,6 +70,70 @@ export default function Home() {
   }, []);
 
   const [joined, setJoined] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      if (!address) {
+        return setJoined(false);
+      }
+
+      const res = await (
+        await fetch(
+          `https://waitlist-server.lorimer.pro/check-address`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              walletAddress: address
+            })
+          }
+        )
+      ).json();
+
+      setJoined(res?.inWaitlist);
+    })();
+  }, [address]);
+
+  const [emailStatus, setEmailStatus] = useState<"error" | undefined>()
+
+  async function subscribe() {
+    if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+      return setEmailStatus("error");
+    } else if (emailStatus === "error") {
+      setEmailStatus(undefined);
+    }
+
+    if (!connected) await connect();
+
+    // @ts-expect-error
+    const signature = await window.arweaveWallet.signMessage(
+      new TextEncoder().encode(address)
+    );
+
+    const res = await (
+      await fetch(
+        `https://waitlist-server.lorimer.pro/record-address`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            owner: publicKey,
+            signature: Array.from(signature),
+            walletAddress: address,
+            mode: strategy
+          })
+        }
+      )
+    ).json();
+
+    if (res?.success)
+      setJoined(true);
+  }
 
   return (
     <>
