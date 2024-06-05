@@ -1,5 +1,6 @@
 import { useActiveAddress, useConnection, usePublicKey, useStrategy } from "@arweave-wallet-kit-beta/react";
 import { Paragraph, SectionTitle, Title } from "./Text";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import AnimatedCheck from "./AnimatedCheck";
 import { styled } from "@linaria/react";
@@ -59,6 +60,29 @@ export default function Home() {
     })();
   }, []);
 
+  const [arPrice, setArPrice] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await (
+          await fetch("https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd")
+        ).json();
+
+        if (!res?.arweave?.usd) {
+          throw new Error("");
+        }
+
+        localStorage.setItem("ar_price_cache", res.arweave.usd.toString());
+        setArPrice(res.arweave.usd);
+      } catch {
+        const cached = localStorage.getItem("ar_price_cache");
+
+        setArPrice(cached ? parseFloat(cached) : 0);
+      }
+    })();
+  }, []);
+
   const [joined, setJoined] = useState(false);
 
   return (
@@ -81,7 +105,7 @@ export default function Home() {
           <Paragraph>
             Subscribe to our newsletter to know when we are ready. Don't worry, we won't spam you and that's guaranteed!
           </Paragraph>
-          {(!joined && (
+          {(joined && (
             <>
               <Spacer y={1.5} />
               <Input
@@ -128,14 +152,28 @@ export default function Home() {
               <th>USD Balance</th>
               <th>AR Balance</th>
             </tr>
-            {users.map((p, i) => (
-              <tr key={i}>
-                <td>{i + 1}.</td>
-                <td>{formatAddress(p.address, 9)}</td>
-                <td>$1,245,555 USD</td>
-                <td>{p.balance.toLocaleString(undefined, { maximumFractionDigits: 2 })} AR</td>
-              </tr>
-            ))}
+            <AnimatePresence>
+              {users.map((p, i) => (
+                <motion.tr
+                  initial={{ opacity: 0, scale: .93 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: .93 }}
+                  key={i}
+                >
+                  <td>{i + 1}.</td>
+                  <td>{formatAddress(p.address, 9)}</td>
+                  <td>
+                    {(p.balance * arPrice).toLocaleString(undefined, {
+                      style: "currency",
+                      currency: "USD",
+                      currencyDisplay: "narrowSymbol",
+                      maximumFractionDigits: 2
+                    }) + " USD"}
+                  </td>
+                  <td>{p.balance.toLocaleString(undefined, { maximumFractionDigits: 2 })} AR</td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </Table>
           <Spacer y={1} />
         </Leaderboard>
