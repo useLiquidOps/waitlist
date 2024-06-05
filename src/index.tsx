@@ -261,11 +261,11 @@ const Form = styled(Card)`
   }
 
   @media screen and (max-width: 1250px) {
-    width: 70%;
+    width: calc(70% - 2rem * 2);
   }
 
   @media screen and (max-width: 720px) {
-    width: 100%;
+    width: calc(100% - 2rem * 2);
   }
 `;
 
