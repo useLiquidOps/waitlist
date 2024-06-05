@@ -91,6 +91,22 @@ export default function Home() {
     })();
   }, []);
 
+  const [stats, setStats] = useState<{ users: number; arTokens: number }>({
+    users: 0,
+    arTokens: 0
+  });
+
+  useEffect(() => {
+    (async () => {
+      const res = await (
+        await fetch("https://waitlist-server.lorimer.pro/waitlist-stats")
+      ).json();
+
+      if (typeof res?.users !== "undefined" && typeof res?.arTokens !== "undefined")
+        setStats(res);
+    })();
+  }, []);
+
   const [joined, setJoined] = useState(false);
 
   return (
@@ -142,13 +158,20 @@ export default function Home() {
         <Leaderboard>
           <Stats>
             <Stat>
-              <h4>5,642</h4>
+              <h4>{stats.users.toLocaleString()}</h4>
               <Paragraph>
                 Users
               </Paragraph>
             </Stat>
             <Stat>
-              <h4>$845,326,235 USD</h4>
+              <h4>
+                {(stats.arTokens * arPrice).toLocaleString(undefined, {
+                  style: "currency",
+                  currency: "USD",
+                  currencyDisplay: "narrowSymbol",
+                  maximumFractionDigits: 2
+                }) + " USD"}
+              </h4>
               <Paragraph>
                 Total user wealth
               </Paragraph>
