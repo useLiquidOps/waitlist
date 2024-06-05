@@ -21,8 +21,11 @@ export default function Home() {
   const [emailStatus, setEmailStatus] = useState<"error" | undefined>()
 
   async function subscribe() {
-    if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))
+    if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
       return setEmailStatus("error");
+    } else if (emailStatus === "error") {
+      setEmailStatus(undefined);
+    }
 
     if (!connected) await connect();
 
