@@ -23,6 +23,11 @@ export const Paragraph = styled.p`
   line-height: 1.45em;
   margin: 0 auto;
 
+  a {
+    text-decoration: none;
+    color: rgb(var(--theme-color));
+  }
+
   @media screen and (max-width: 1250px) {
     width: 70%;
   }

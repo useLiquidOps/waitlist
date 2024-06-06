@@ -43,7 +43,7 @@ export default function Berlin() {
             <b>Height:</b>{" "}1.78 m (5'8", but let's not talk about it)<br />
             <b>Beard:</b>{" "}10/10<br />
             <br />
-            Lorimer loves cheese and he's the tall guy from the two of us. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente tempore accusantium, quos adipisci amet ducimus, sequi consectetur natus earum mollitia dicta optio delectus excepturi quibusdam perspiciatis quasi. Blanditiis, non et!
+            Marton is the founder of the popular <a href="https://arconnect.io" target="_blank" rel="noopener noreferrer">ArConnect wallet</a>. He also contributed to and worked on numerous Arweave projects within the <a href="https://communitylabs.com" target="_blank" rel="noopener noreferrer">Community Labs</a> team, such as <a href="https://bark.arweave.dev" target="_blank" rel="noopener noreferrer">Bark</a>, <a href="https://github.com/permaweb/aos" target="_blank" rel="noopener noreferrer">aos</a> and more.
           </Paragraph>
         </ProfileCard>
         <Photo src="/marton.jpeg" alt="Marton" draggable={false} />
