@@ -24,11 +24,11 @@ export default function Berlin() {
           </SectionTitle>
           <Spacer y={.85} />
           <Paragraph>
-            <b>Age:</b>{" "}20 (soon 21!!!)<br />
-            <b>Height:</b>{" "}2 m+ (6'5")<br />
+            <b>Age:</b>{" "}20 (soon 21!)<br />
+            <b>Height:</b>{" "}2 m+ (6'3")<br />
             <b>Hair:</b>{" "}7/10 (but he's working on it)<br />
             <br />
-            Lorimer loves cheese and he's the tall guy from the two of us. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente tempore accusantium, quos adipisci amet ducimus, sequi consectetur natus earum mollitia dicta optio delectus excepturi quibusdam perspiciatis quasi. Blanditiis, non et!
+            Previously Lorimer founded Othent.io, an arweave ecosystem wallet which enables Oauth logins instead of private keys authentication. He is also currently an Engineering Partner on ao Ventures as well as a developer at Community Labs.
           </Paragraph>
         </ProfileCard>
       </Profile>
