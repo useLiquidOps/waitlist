@@ -13,23 +13,13 @@ import Input from "./Input";
 import Card from "./Card";
 
 export default function Home() {
-  const { connect, connected } = useConnection();
+  const { connect, connected, disconnect } = useConnection();
   const address = useActiveAddress();
   const publicKey = usePublicKey();
   const [email, setEmail] = useState<string | undefined>();
   const strategy = useStrategy();
 
   const [users, setUsers] = useState<{ address: string; balance: number; }[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const res = await (
-        await fetch("https://waitlist-server.lorimer.pro/get-address-list")
-      ).json();
-
-      setUsers(res);
-    })();
-  }, []);
 
   const [arPrice, setArPrice] = useState(0);
 
@@ -97,6 +87,16 @@ export default function Home() {
     })();
   }, [joined]);
 
+  useEffect(() => {
+    (async () => {
+      const res = await (
+        await fetch("https://waitlist-server.lorimer.pro/get-address-list")
+      ).json();
+
+      setUsers(res);
+    })();
+  }, [joined]);
+
   const [emailStatus, setEmailStatus] = useState<"error" | undefined>();
 
   async function subscribe() {
@@ -143,8 +143,7 @@ export default function Home() {
       )
     ).json();
 
-    if (res?.success)
-      setJoined(true);
+    setJoined(res?.success || false);
   }
 
   return (
@@ -189,6 +188,10 @@ export default function Home() {
               <Paragraph>
                 You've joined successfully! See you soon!
               </Paragraph>
+              <Spacer y={1.5} />
+              <Button onClick={() => { disconnect(); setJoined(false); }}>
+                Disconnect
+              </Button>
             </>
           )}
         </Form>
