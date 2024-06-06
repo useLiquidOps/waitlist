@@ -26,8 +26,8 @@ export default function Dialog() {
           </Head>
           <Spacer y={.8} />
           <Text>
-            Lorimer and Marton are attending the Arweave Day at Berlin along with the <a href="https://communitylabs.com" target="_blank" rel="noopener noreferrer">CommunityLabs</a> team. 
-            Come join us at one of the events, we'd love to talk to you about our project! 
+            Lorimer and Marton are attending arweave Day in Berlin along with the <a href="https://communitylabs.com" target="_blank" rel="noopener noreferrer">CommunityLabs</a> team. 
+            Come and say hey if you see us, we'd love to talk to you about our new project! 
           </Text>
           <Spacer y={1.15} />
           <Link href="/berlin">

@@ -155,7 +155,7 @@ export default function Home() {
           </Title>
           <Spacer y={0.4} />
           <Paragraph>
-            Name is the very first lending protocol on Arweave and the AO computer
+            Name is the very first lending protocol on arweave and the ao computer
           </Paragraph>
         </div>
         <Form>
@@ -164,7 +164,7 @@ export default function Home() {
           </SectionTitle>
           <Spacer y={0.6} />
           <Paragraph>
-            Subscribe to our newsletter to know when we are ready. Don't worry, we won't spam you and that's guaranteed!
+            Subscribe to our newsletter to know when we are ready. Don't worry, we won't spam you!
           </Paragraph>
           {(!joined && (
             <>
@@ -201,7 +201,7 @@ export default function Home() {
             <Stat>
               <h4>{stats.users.toLocaleString()}</h4>
               <Paragraph>
-                Users
+                Wait list sign ups
               </Paragraph>
             </Stat>
             <Stat>
