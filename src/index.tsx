@@ -144,6 +144,7 @@ export default function Home() {
     ).json();
 
     setJoined(res?.success || false);
+    if (res?.success) setEmail("");
   }
 
   return (
