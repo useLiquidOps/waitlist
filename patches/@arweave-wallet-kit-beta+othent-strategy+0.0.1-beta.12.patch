@@ -1,0 +1,27 @@
+diff --git a/node_modules/@arweave-wallet-kit-beta/othent-strategy/dist/index.es.js b/node_modules/@arweave-wallet-kit-beta/othent-strategy/dist/index.es.js
+index 05175d4..c1280e6 100644
+--- a/node_modules/@arweave-wallet-kit-beta/othent-strategy/dist/index.es.js
++++ b/node_modules/@arweave-wallet-kit-beta/othent-strategy/dist/index.es.js
+@@ -23,7 +23,7 @@ var __privateSet = (obj, member, value, setter) => {
+   return value;
+ };
+ var _addressListeners, _currentAddress;
+-import { connect, disconnect, decrypt, dispatch, encrypt, getActiveKey, getActivePublicKey, getWalletNames, sign, signature } from "@othent/kms";
++import { connect, disconnect, decrypt, dispatch, encrypt, getActiveAddress, getActivePublicKey, getWalletNames, sign, signature } from "@othent/kms";
+ var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+ function getDefaultExportFromCjs(x) {
+   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
+@@ -3674,11 +3674,11 @@ class OthentStrategy {
+     }
+   }
+   async getActiveAddress() {
+-    const address = await getActiveKey();
++    const address = await getActiveAddress();
+     return address;
+   }
+   async getAllAddresses() {
+-    const addr = await getActiveKey();
++    const addr = await getActiveAddress();
+     return [addr];
+   }
+   async getArweaveConfig() {
