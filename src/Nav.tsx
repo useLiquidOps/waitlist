@@ -11,7 +11,7 @@ export default function Nav() {
         <Link href="/blog">
           Blog
         </Link>
-        <a href="https://x.com" target="_blank" rel="noopener noreferer">
+        <a href="https://x.com/OpLiquidity" target="_blank" rel="noopener noreferer">
           Twitter (now X!)
         </a>
       </Menu>
