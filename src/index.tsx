@@ -215,7 +215,7 @@ export default function Home() {
                 }) + " USD"}
               </h4>
               <Paragraph>
-                Total user wealth
+                User-controlled assets
               </Paragraph>
             </Stat>
           </Stats>

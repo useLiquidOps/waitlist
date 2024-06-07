@@ -24,7 +24,6 @@ export default function Berlin() {
           </SectionTitle>
           <Spacer y={.85} />
           <Paragraph>
-            <b>Age:</b>{" "}20 (soon 21!)<br />
             <b>Height:</b>{" "}2 m+ (6'3")<br />
             <b>Hair:</b>{" "}7/10 (but he's working on it)<br />
             <br />
@@ -39,7 +38,6 @@ export default function Berlin() {
           </SectionTitle>
           <Spacer y={.85} />
           <Paragraph>
-            <b>Age:</b>{" "}21<br />
             <b>Height:</b>{" "}1.78 m (5'8", but let's not talk about it)<br />
             <b>Beard:</b>{" "}10/10<br />
             <br />
