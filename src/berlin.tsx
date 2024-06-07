@@ -17,7 +17,7 @@ export default function Berlin() {
         </Paragraph>
       </div>
       <Profile>
-        <Photo src="/lorimer.jpeg" alt="Lorimer" draggable={false} />
+        <Photo src="/lorimer.png" alt="Lorimer" draggable={false} />
         <ProfileCard>
           <SectionTitle>
             Lorimer

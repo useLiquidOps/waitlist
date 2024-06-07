@@ -17,7 +17,7 @@ export default function Blog() {
       </div>
       <Article>
         <Title>
-          Introducing Our New Lending Protocol: Blog Announcement
+          Introducing Operation Liquidity: Blog Announcement
         </Title>
         <Paragraph>
           We're excited to announce our decentralized lending and borrowing protocol specifically native to the Arweave ecosystem. This platform allows users to utilize their digital assets as collateral without having to sell them, providing a smooth and user-friendly experience.
@@ -32,10 +32,10 @@ export default function Blog() {
           Get ready for the testnet launch in the coming weeks. Stay updated by visiting our website and following us on social media. Join us in reshaping the way you manage your digital assets!
         </Paragraph>
         <Paragraph>
-          For more information, stay tuned to our channels.
+          For more information, stay tuned to our channels and join our waitlist at operationliquidity.xyz
         </Paragraph>
         <Paragraph>
-          <i>June 6, 2024</i>
+          <i>June 7, 2024</i>
         </Paragraph>
       </Article>
     </Wrapper>
