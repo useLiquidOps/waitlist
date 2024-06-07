@@ -152,11 +152,11 @@ export default function Home() {
       <Wrapper>
         <div>
           <Title>
-            Name
+            Operation Liquidity
           </Title>
           <Spacer y={0.4} />
           <Paragraph>
-            Name is the very first lending protocol on arweave and the ao computer
+            Operation Liquidity is the very first lending protocol on arweave and the ao computer
           </Paragraph>
         </div>
         <Form>
@@ -252,6 +252,11 @@ export default function Home() {
               ))}
             </AnimatePresence>
           </Table>
+          {users.length === 0 && (
+            <Paragraph>
+              You can be the first one to sign up!
+            </Paragraph>
+          )}
           <Spacer y={1} />
         </Leaderboard>
       </Wrapper>
