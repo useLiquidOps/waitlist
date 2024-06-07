@@ -17,7 +17,7 @@ export default function Blog() {
       </div>
       <Article>
         <Title>
-          Introducing Operation Liquidity: Blog Announcement
+          Introducing: Operation Liquidity
         </Title>
         <Paragraph>
           We're excited to announce our decentralized lending and borrowing protocol specifically native to the Arweave ecosystem. This platform allows users to utilize their digital assets as collateral without having to sell them, providing a smooth and user-friendly experience.

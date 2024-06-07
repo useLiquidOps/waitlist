@@ -5,7 +5,7 @@ export default function Nav() {
   return (
     <Wrapper>
       <Link href="/">
-        <Icon src="/logo.jpeg" draggable={false} />
+        <Icon src="/logo.png" draggable={false} />
       </Link>
       <Menu>
         <Link href="/blog">
