@@ -100,7 +100,7 @@ export default function Home() {
   const [emailStatus, setEmailStatus] = useState<"error" | undefined>();
 
   async function subscribe() {
-    if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+    if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) && email != "" && typeof email != "undefined") {
       return setEmailStatus("error");
     } else if (emailStatus === "error") {
       setEmailStatus(undefined);
@@ -237,9 +237,7 @@ export default function Home() {
                 >
                   <td>{i + 1}.</td>
                   <td>
-                    <a href={`https://viewblock.io/arweave/address/${p.address}`} target="_blank" rel="noopener noreferrer">
-                      {formatAddress(p.address, 9)}
-                    </a>
+                    {p.address}
                   </td>
                   <td>
                     {(p.balance * arPrice).toLocaleString(undefined, {

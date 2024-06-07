@@ -14,7 +14,7 @@ export default function Input({ value, onChange, status, onEnter, ...props }: HT
     <Wrapper error={status == "error"}>
       <Content>
         <Label hasContent={typeof val !== "undefined" && val !== ""}>
-          Your email
+          Your email (Not required)
         </Label>
         <Icon />
       </Content>
