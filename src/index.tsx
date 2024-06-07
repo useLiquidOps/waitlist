@@ -6,6 +6,7 @@ import AnimatedCheck from "./AnimatedCheck";
 import { getActiveAddress, getActivePublicKey, signMessage } from "@othent/kms";
 import { styled } from "@linaria/react";
 import Wrapper from "./Wrapper";
+import Spinner from "./Spinner";
 import Spacer from "./Spacer";
 import Dialog from "./Dialog";
 import Button from "./Button";
@@ -98,6 +99,7 @@ export default function Home() {
   }, [joined]);
 
   const [emailStatus, setEmailStatus] = useState<"error" | undefined>();
+  const [loading, setLoading] = useState(false);
 
   async function subscribe() {
     if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) && email != "" && typeof email != "undefined") {
@@ -106,45 +108,51 @@ export default function Home() {
       setEmailStatus(undefined);
     }
 
-    if (!connected) await connect();
-    let signature: number[];
-    const data = new TextEncoder().encode(address);
-    let walletAddress = address;
-    let owner = publicKey;
+    setLoading(true);
 
-    if (strategy === "othent") {
-      signature = await signMessage(data, { hashAlgorithm: "SHA-256" });
-      walletAddress = await getActiveAddress();
-      owner = await getActivePublicKey();
-    } else {
-      signature = Array.from(
-        // @ts-expect-error
-        await window.arweaveWallet.signMessage(data)
-      );
-      walletAddress = await window.arweaveWallet.getActiveAddress();
-      owner = await window.arweaveWallet.getActivePublicKey();
-    }
+    try {
+      if (!connected) await connect();
+      let signature: number[];
+      const data = new TextEncoder().encode(address);
+      let walletAddress = address;
+      let owner = publicKey;
 
-    const res = await (
-      await fetch(
-        `https://waitlist-server.lorimer.pro/record-address`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email,
-            owner,
-            signature,
-            walletAddress
-          })
-        }
-      )
-    ).json();
+      if (strategy === "othent") {
+        signature = await signMessage(data, { hashAlgorithm: "SHA-256" });
+        walletAddress = await getActiveAddress();
+        owner = await getActivePublicKey();
+      } else {
+        signature = Array.from(
+          // @ts-expect-error
+          await window.arweaveWallet.signMessage(data)
+        );
+        walletAddress = await window.arweaveWallet.getActiveAddress();
+        owner = await window.arweaveWallet.getActivePublicKey();
+      }
 
-    setJoined(res?.success || false);
-    if (res?.success) setEmail("");
+      const res = await (
+        await fetch(
+          `https://waitlist-server.lorimer.pro/record-address`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              email,
+              owner,
+              signature,
+              walletAddress
+            })
+          }
+        )
+      ).json();
+
+      setJoined(res?.success || false);
+      if (res?.success) setEmail("");
+    } catch {}
+
+    setLoading(false);
   }
 
   return (
@@ -178,7 +186,7 @@ export default function Home() {
               />
               <Spacer y={1.5} />
               <Button onClick={subscribe}>
-                {connected ? "Sign up" : "Connect"}
+                {(!loading && connected ? "Sign up" : "Connect") || <Spinner />}
               </Button>
             </>
           )) || (
