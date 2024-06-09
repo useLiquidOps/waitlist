@@ -1,26 +1,34 @@
-import { useActiveAddress, useStrategy, useConnection, usePublicKey } from "@arweave-wallet-kit-beta/react";
-import { Paragraph, SectionTitle, Title } from "./Text";
+import {
+  useActiveAddress,
+  useStrategy,
+  useConnection,
+  usePublicKey,
+} from "@arweave-wallet-kit-beta/react";
+import { Paragraph, SectionTitle, Title } from "../../components/Text";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import AnimatedCheck from "./AnimatedCheck";
+import AnimatedCheck from "../../components/AnimatedCheck";
 import { getActiveAddress, getActivePublicKey, signMessage } from "@othent/kms";
 import { styled } from "@linaria/react";
-import Wrapper from "./Wrapper";
-import Spinner from "./Spinner";
-import Spacer from "./Spacer";
-import Dialog from "./Dialog";
-import Button from "./Button";
-import Input from "./Input";
-import Card from "./Card";
+import Wrapper from "../../components/Wrapper";
+import Spinner from "../../components/Spinner";
+import Spacer from "../../components/Spacer";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
+import Card from "../../components/Card";
+import { WalletConnectButton } from "../../utils/wallets/walletConnect";
+import { SignWCMessage } from "../../utils/wallets/walletConnect";
 
 export default function Home() {
   const { connect, connected, disconnect } = useConnection();
   const address = useActiveAddress();
   const publicKey = usePublicKey();
-  const [email, setEmail] = useState<string | undefined>();
+  const [email, setEmail] = useState<string | undefined>();
   const strategy = useStrategy();
 
-  const [users, setUsers] = useState<{ address: string; balance: number; }[]>([]);
+  const [users, setUsers] = useState<{ address: string; balance: number }[]>(
+    []
+  );
 
   const [arPrice, setArPrice] = useState(0);
 
@@ -28,7 +36,9 @@ export default function Home() {
     (async () => {
       try {
         const res = await (
-          await fetch("https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd")
+          await fetch(
+            "https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd"
+          )
         ).json();
 
         if (!res?.arweave?.usd) {
@@ -47,7 +57,7 @@ export default function Home() {
 
   const [stats, setStats] = useState<{ users: number; arTokens: number }>({
     users: 0,
-    arTokens: 0
+    arTokens: 0,
   });
 
   const [joined, setJoined] = useState(false);
@@ -59,18 +69,15 @@ export default function Home() {
       }
 
       const res = await (
-        await fetch(
-          `https://waitlist-server.lorimer.pro/check-address`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              walletAddress: address
-            })
-          }
-        )
+        await fetch(`https://waitlist-server.lorimer.pro/check-address`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            walletAddress: address,
+          }),
+        })
       ).json();
 
       setJoined(res?.inWaitlist);
@@ -83,13 +90,16 @@ export default function Home() {
         await fetch("https://waitlist-server.lorimer.pro/waitlist-stats")
       ).json();
 
-      if (typeof res?.users !== "undefined" && typeof res?.arTokens !== "undefined")
+      if (
+        typeof res?.users !== "undefined" &&
+        typeof res?.arTokens !== "undefined"
+      )
         setStats(res);
     })();
   }, [joined]);
 
   useEffect(() => {
-    (async () => {
+    (async () => {
       const res = await (
         await fetch("https://waitlist-server.lorimer.pro/get-address-list")
       ).json();
@@ -102,7 +112,11 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   async function subscribe() {
-    if (!email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) && email != "" && typeof email != "undefined") {
+    if (
+      !email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) &&
+      email != "" &&
+      typeof email != "undefined"
+    ) {
       return setEmailStatus("error");
     } else if (emailStatus === "error") {
       setEmailStatus(undefined);
@@ -126,29 +140,29 @@ export default function Home() {
           // @ts-expect-error
           await window.arweaveWallet.signMessage(data)
         );
+        // @ts-ignore
         walletAddress = await window.arweaveWallet.getActiveAddress();
+        // @ts-ignore
         owner = await window.arweaveWallet.getActivePublicKey();
       }
 
       const res = await (
-        await fetch(
-          `https://waitlist-server.lorimer.pro/record-address`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              email,
-              owner,
-              signature,
-              walletAddress
-            })
-          }
-        )
+        await fetch(`https://waitlist-server.lorimer.pro/record-address`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            owner,
+            signature,
+            walletAddress,
+            network: 'AR'
+          }),
+        })
       ).json();
 
-      setJoined(res?.success || false);
+      setJoined(res?.success || false);
       if (res?.success) setEmail("");
     } catch {}
 
@@ -159,28 +173,26 @@ export default function Home() {
     <>
       <Wrapper>
         <div>
-          <Title>
-            Operation Liquidity
-          </Title>
+          <Title>Operation Liquidity</Title>
           <Spacer y={0.4} />
           <Paragraph>
-            Operation Liquidity is the very first lending protocol on arweave and the ao computer
+            Operation Liquidity is the very first lending protocol on arweave
+            and the ao computer
           </Paragraph>
         </div>
         <Form>
-          <SectionTitle>
-            Join the waitlist!
-          </SectionTitle>
+          <SectionTitle>Join the waitlist!</SectionTitle>
           <Spacer y={0.6} />
           <Paragraph>
-            Subscribe to our newsletter to know when we are ready. Don't worry, we won't spam you!
+            Subscribe to our newsletter to know when we are ready. Don't worry,
+            we won't spam you!
           </Paragraph>
           {(!joined && (
             <>
               <Spacer y={1.5} />
               <Input
                 value={email}
-                onChange={(e) => setEmail(e.currentTarget.value)}
+                onChange={(e) => setEmail(e.currentTarget.value)}
                 status={emailStatus}
                 onEnter={subscribe}
               />
@@ -188,30 +200,33 @@ export default function Home() {
               <Button onClick={subscribe}>
                 {(!loading && connected ? "Sign up" : "Connect") || <Spinner />}
               </Button>
+              <WalletConnectButton />
+              <SignWCMessage />
             </>
           )) || (
             <>
               <Spacer y={1.5} />
               <AnimatedCheck />
-              <Spacer y={.7} />
-              <Paragraph>
-                You've joined successfully! See you soon!
-              </Paragraph>
+              <Spacer y={0.7} />
+              <Paragraph>You've joined successfully!</Paragraph>
               <Spacer y={1.5} />
-              <Button onClick={() => { disconnect(); setJoined(false); }}>
+              <Button
+                onClick={() => {
+                  disconnect();
+                  setJoined(false);
+                }}
+              >
                 Disconnect
               </Button>
             </>
           )}
         </Form>
-        <Spacer y={.01} />
+        <Spacer y={0.01} />
         <Leaderboard>
           <Stats>
             <Stat>
               <h4>{stats.users.toLocaleString()}</h4>
-              <Paragraph>
-                Wait list sign ups
-              </Paragraph>
+              <Paragraph>Wait list sign ups</Paragraph>
             </Stat>
             <Stat>
               <h4>
@@ -219,12 +234,10 @@ export default function Home() {
                   style: "currency",
                   currency: "USD",
                   currencyDisplay: "narrowSymbol",
-                  maximumFractionDigits: 2
+                  maximumFractionDigits: 2,
                 }) + " USD"}
               </h4>
-              <Paragraph>
-                User-controlled assets
-              </Paragraph>
+              <Paragraph>User-controlled assets</Paragraph>
             </Stat>
           </Stats>
           <Spacer y={1} />
@@ -238,37 +251,37 @@ export default function Home() {
             <AnimatePresence>
               {users.map((p, i) => (
                 <motion.tr
-                  initial={{ opacity: 0, scale: .93 }}
+                  initial={{ opacity: 0, scale: 0.93 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: .93 }}
+                  exit={{ opacity: 0, scale: 0.93 }}
                   key={i}
                 >
                   <td>{i + 1}.</td>
-                  <td>
-                    {p.address}
-                  </td>
+                  <td>{p.address}</td>
                   <td>
                     {(p.balance * arPrice).toLocaleString(undefined, {
                       style: "currency",
                       currency: "USD",
                       currencyDisplay: "narrowSymbol",
-                      maximumFractionDigits: 2
+                      maximumFractionDigits: 2,
                     }) + " USD"}
                   </td>
-                  <td>{p.balance.toLocaleString(undefined, { maximumFractionDigits: 2 })} AR</td>
+                  <td>
+                    {p.balance.toLocaleString(undefined, {
+                      maximumFractionDigits: 2,
+                    })}{" "}
+                    AR
+                  </td>
                 </motion.tr>
               ))}
             </AnimatePresence>
           </Table>
-          {users.length === 0 && (
-            <Paragraph>
-              You can be the first one to sign up!
-            </Paragraph>
+          {users.length === 0 && (
+            <Paragraph></Paragraph>
           )}
           <Spacer y={1} />
         </Leaderboard>
       </Wrapper>
-      <Dialog />
     </>
   );
 }
@@ -310,7 +323,7 @@ const Stat = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 2.2rem 0;
-  gap: .4rem;
+  gap: 0.4rem;
 
   &:first-child {
     border-right: 1px solid #eaecf0;
@@ -331,21 +344,23 @@ const Table = styled.table`
 
   tr {
     border-bottom: 1px solid #eaecf0;
-    transition: all .17s ease;
+    transition: all 0.17s ease;
 
     &:last-child {
       border-bottom: 0;
     }
 
-    td, th {
+    td,
+    th {
       font-weight: 500;
-      font-size: .9rem;
+      font-size: 0.9rem;
       color: #000;
       line-height: 1.45em;
       text-align: left;
-      padding: .75rem;
+      padding: 0.75rem;
 
-      &:nth-child(3), &:nth-child(4) {
+      &:nth-child(3),
+      &:nth-child(4) {
         text-align: right;
       }
 
@@ -357,12 +372,12 @@ const Table = styled.table`
 
     th {
       font-weight: 400;
-      color: #B5B5B5;
+      color: #b5b5b5;
       padding-top: 0;
     }
 
     &:not(:first-child):hover {
-      opacity: .6 !important;
+      opacity: 0.6 !important;
     }
   }
 `;
