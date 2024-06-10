@@ -124,6 +124,7 @@ export default function Home() {
 
   const [emailStatus, setEmailStatus] = useState<"error" | undefined>();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>();
 
   async function subscribe() {
     if (!address) return;
@@ -184,7 +185,10 @@ export default function Home() {
   
         setJoined(res?.success || false);
         if (res?.success) setEmail("");
-      } catch {}
+        else setError(res.message || "Unknown error");
+      } catch (e: any) {
+        setError(`Error: ${(e?.message || e)}`);
+      }
 
       setLoading(false);
     })();
@@ -432,4 +436,8 @@ const Buttons = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1rem;
+`;
+
+const ErrorText = styled(Paragraph)`
+  color: #ff0000;
 `;
