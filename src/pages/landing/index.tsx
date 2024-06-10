@@ -18,6 +18,7 @@ import Input from "../../components/Input";
 import Card from "../../components/Card";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
+import { usePrice } from "../../utils/price"
 
 export default function Home() {
   const { connect, disconnect } = useConnection();
@@ -29,8 +30,6 @@ export default function Home() {
   const [users, setUsers] = useState<{ address: string; balance: number }[]>(
     [],
   );
-
-  const [arPrice, setArPrice] = useState(0);
 
   const { open } = useWeb3Modal();
   const { address: ethAddr } = useAccount();
@@ -46,28 +45,8 @@ export default function Home() {
     return address.length === 42 ? "eth" : "ar";
   }, [address]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await (
-          await fetch(
-            "https://api.coingecko.com/api/v3/simple/price?ids=arweave&vs_currencies=usd",
-          )
-        ).json();
-
-        if (!res?.arweave?.usd) {
-          throw new Error("");
-        }
-
-        localStorage.setItem("ar_price_cache", res.arweave.usd.toString());
-        setArPrice(res.arweave.usd);
-      } catch {
-        const cached = localStorage.getItem("ar_price_cache");
-
-        setArPrice(cached ? parseFloat(cached) : 0);
-      }
-    })();
-  }, []);
+  const arPrice = usePrice("arweave");
+  const ethPrice= usePrice("ethereum");
 
   const [stats, setStats] = useState<{ users: number; arTokens: number }>({
     users: 0,
@@ -326,14 +305,14 @@ export default function Home() {
                     <td>{i + 1}.</td>
                     <td>{p.address}</td>
                     <td>
-                      {typeof p.balance === "number"
-                        ? (p.balance * arPrice).toLocaleString(undefined, {
+                      {(typeof p.balance === "number"
+                        ? (p.balance * arPrice) : Object.entries(p.balance).map(([token, balance]) => balance * (token === "eth" ? ethPrice : 1)).reduce((curr, acc) => curr + acc, 0)).toLocaleString(undefined, {
                             style: "currency",
                             currency: "USD",
                             currencyDisplay: "narrowSymbol",
                             maximumFractionDigits: 2,
-                          }) + " USD"
-                        : "N/A"}
+                          })}
+                        {" USD"}
                     </td>
                     <td>
                       {typeof p.balance === "number"
