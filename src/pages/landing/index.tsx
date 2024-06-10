@@ -319,7 +319,7 @@ export default function Home() {
                     <td>{p.address}</td>
                     <td>
                       {(typeof p.balance === "number"
-                        ? (p.balance * arPrice) : Object.entries(p.balance).map(([token, balance]) => balance * (token === "eth" ? ethPrice : 1)).reduce((curr, acc) => curr + acc, 0)).toLocaleString(undefined, {
+                        ? (p.balance * arPrice) : Object.entries(p.balance).map(([token, balance]) => (balance as number) * (token === "eth" ? ethPrice : 1)).reduce((curr, acc) => curr + acc, 0)).toLocaleString(undefined, {
                             style: "currency",
                             currency: "USD",
                             currencyDisplay: "narrowSymbol",
@@ -335,7 +335,7 @@ export default function Home() {
                         : Object.entries(p.balance)
                             .map(
                               ([token, balance]) =>
-                                `${balance.toLocaleString(undefined, {
+                                `${(balance as number).toLocaleString(undefined, {
                                   maximumFractionDigits:
                                     token === "eth" ? 4 : 2,
                                 })} ${token.toUpperCase()}`,
