@@ -6,9 +6,9 @@ import {
 } from "@arweave-wallet-kit-beta/react";
 import { Paragraph, SectionTitle, Title } from "../../components/Text";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AnimatedCheck from "../../components/AnimatedCheck";
-import { getActiveAddress, getActivePublicKey, signMessage } from "@othent/kms";
+import { signMessage } from "@othent/kms";
 import { styled } from "@linaria/react";
 import Wrapper from "../../components/Wrapper";
 import Spinner from "../../components/Spinner";
@@ -16,12 +16,12 @@ import Spacer from "../../components/Spacer";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import Card from "../../components/Card";
-import { WalletConnectButton } from "../../utils/wallets/walletConnect";
-import { SignWCMessage } from "../../utils/wallets/walletConnect";
+import { useWeb3Modal } from "@web3modal/wagmi/react"
+import { useAccount, useDisconnect, useSignMessage } from "wagmi"
 
 export default function Home() {
-  const { connect, connected, disconnect } = useConnection();
-  const address = useActiveAddress();
+  const { connect, disconnect } = useConnection();
+  const arAddr = useActiveAddress();
   const publicKey = usePublicKey();
   const [email, setEmail] = useState<string | undefined>();
   const strategy = useStrategy();
@@ -31,6 +31,20 @@ export default function Home() {
   );
 
   const [arPrice, setArPrice] = useState(0);
+
+  const { open } = useWeb3Modal();
+  const { address: ethAddr } = useAccount();
+  const { disconnect: disconnectEth } = useDisconnect();
+  const { signMessage: signMsgEth, data: signMsgData } = useSignMessage();
+
+  const [arSig, setArSig] = useState<number[] | undefined>();
+
+  const address = useMemo(() => arAddr || ethAddr, [ethAddr, arAddr]);
+  const connected = useMemo(() => typeof address === "string", [address]);
+  const mode = useMemo(() => {
+    if (typeof address !== "string") return undefined;
+    return address.length === 42 ? "eth" : "ar";
+  }, [address]);
 
   useEffect(() => {
     (async () => {
@@ -112,6 +126,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   async function subscribe() {
+    if (!address) return;
     if (
       !email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) &&
       email != "" &&
@@ -125,49 +140,55 @@ export default function Home() {
     setLoading(true);
 
     try {
-      if (!connected) await connect();
-      let signature: number[];
-      const data = new TextEncoder().encode(address);
-      let walletAddress = address;
-      let owner = publicKey;
+      if (mode === "ar") {
+        const data = new TextEncoder().encode(address);
 
-      if (strategy === "othent") {
-        signature = await signMessage(data, { hashAlgorithm: "SHA-256" });
-        walletAddress = await getActiveAddress();
-        owner = await getActivePublicKey();
+        if (strategy === "othent") {
+          setArSig(await signMessage(data, { hashAlgorithm: "SHA-256" }));
+        } else {
+          setArSig(Array.from(
+            // @ts-expect-error
+            await window.arweaveWallet.signMessage(data)
+          ));
+        }
       } else {
-        signature = Array.from(
-          // @ts-expect-error
-          await window.arweaveWallet.signMessage(data)
-        );
-        // @ts-ignore
-        walletAddress = await window.arweaveWallet.getActiveAddress();
-        // @ts-ignore
-        owner = await window.arweaveWallet.getActivePublicKey();
+        signMsgEth({ message: address })
       }
-
-      const res = await (
-        await fetch(`https://waitlist-server.lorimer.pro/record-address`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            owner,
-            signature,
-            walletAddress,
-            network: 'AR'
-          }),
-        })
-      ).json();
-
-      setJoined(res?.success || false);
-      if (res?.success) setEmail("");
-    } catch {}
-
-    setLoading(false);
+    } catch {
+      setLoading(false);
+    }
   }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!mode || !address) return;
+        if (mode === "ar" && (!arSig || !publicKey)) return;
+        if (mode === "eth" && !signMsgData) return;
+
+        const res = await (
+          await fetch(`https://waitlist-server.lorimer.pro/record-address`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              owner: publicKey,
+              signature: mode === "ar" ? arSig : signMsgData,
+              walletAddress: address,
+              network: mode.toUpperCase()
+            }),
+          })
+        ).json();
+  
+        setJoined(res?.success || false);
+        if (res?.success) setEmail("");
+      } catch {}
+
+      setLoading(false);
+    })();
+  }, [arSig, signMsgData, address, publicKey, mode]);
 
   return (
     <>
@@ -194,14 +215,32 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.currentTarget.value)}
                 status={emailStatus}
-                onEnter={subscribe}
               />
               <Spacer y={1.5} />
-              <Button onClick={subscribe}>
-                {(!loading && connected ? "Sign up" : "Connect") || <Spinner />}
-              </Button>
-              <WalletConnectButton />
-              <SignWCMessage />
+              <Buttons>
+                {(!connected && (
+                  <>
+                    <Button onClick={() => connect()}>
+                      Arweave
+                    </Button>
+                    <Button onClick={() => open()}>
+                      Ethereum
+                    </Button>
+                  </>
+                )) || (
+                  <Button onClick={() => subscribe()}>
+                    {!loading ? "Sign up" : <Spinner />}
+                  </Button>
+                )}
+              </Buttons>
+              {connected && !joined && (
+                <>
+                  <Spacer y={1} />
+                  <Paragraph>
+                    You will need to sign your wallet address, so we can verify it.
+                  </Paragraph>
+                </>
+              )}
             </>
           )) || (
             <>
@@ -212,8 +251,10 @@ export default function Home() {
               <Spacer y={1.5} />
               <Button
                 onClick={() => {
-                  disconnect();
+                  if (mode === "ar") disconnect();
+                  else disconnectEth();
                   setJoined(false);
+                  setArSig(undefined);
                 }}
               >
                 Disconnect
@@ -288,10 +329,6 @@ export default function Home() {
 
 const Form = styled(Card)`
   padding: 2rem;
-
-  ${Button} {
-    margin: 0 auto;
-  }
 
   @media screen and (max-width: 1250px) {
     width: calc(70% - 2rem * 2);
@@ -380,4 +417,11 @@ const Table = styled.table`
       opacity: 0.6 !important;
     }
   }
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 `;
