@@ -248,6 +248,16 @@ export default function Home() {
                     <Spacer y={1} />
                     <ErrorText>
                       {error}
+                      {" "}
+                      <u
+                        onClick={() => {
+                          if (mode === "ar") disconnect();
+                          else disconnectEth();
+                          setError("");
+                        }}
+                      >
+                        Disconnect and try again
+                      </u>
                     </ErrorText>
                   </motion.div>
                 )}
@@ -450,4 +460,8 @@ const ErrorText = styled(Paragraph)`
   background-color: rgba(255, 0, 0, .15);
   padding: .7rem 1.2rem;
   border-radius: 15px;
+
+  u {
+    cursor: pointer;
+  }
 `;
