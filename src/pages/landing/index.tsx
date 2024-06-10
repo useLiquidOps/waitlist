@@ -283,38 +283,42 @@ export default function Home() {
           </Stats>
           <Spacer y={1} />
           <Table>
-            <tr>
-              <th></th>
-              <th>Address</th>
-              <th>USD Balance</th>
-              <th>AR Balance</th>
-            </tr>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Address</th>
+                <th>USD Balance</th>
+                <th>AR Balance</th>
+              </tr>
+            </thead>
             <AnimatePresence>
-              {users.map((p, i) => (
-                <motion.tr
-                  initial={{ opacity: 0, scale: 0.93 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.93 }}
-                  key={i}
-                >
-                  <td>{i + 1}.</td>
-                  <td>{p.address}</td>
-                  <td>
-                    {(p.balance * arPrice).toLocaleString(undefined, {
-                      style: "currency",
-                      currency: "USD",
-                      currencyDisplay: "narrowSymbol",
-                      maximumFractionDigits: 2,
-                    }) + " USD"}
-                  </td>
-                  <td>
-                    {p.balance.toLocaleString(undefined, {
-                      maximumFractionDigits: 2,
-                    })}{" "}
-                    AR
-                  </td>
-                </motion.tr>
-              ))}
+              <tbody>
+                {users.map((p, i) => (
+                  <motion.tr
+                    initial={{ opacity: 0, scale: 0.93 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.93 }}
+                    key={i}
+                  >
+                    <td>{i + 1}.</td>
+                    <td>{p.address}</td>
+                    <td>
+                      {(p.balance * arPrice).toLocaleString(undefined, {
+                        style: "currency",
+                        currency: "USD",
+                        currencyDisplay: "narrowSymbol",
+                        maximumFractionDigits: 2,
+                      }) + " USD"}
+                    </td>
+                    <td>
+                      {p.balance.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      AR
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
             </AnimatePresence>
           </Table>
           {users.length === 0 && (
@@ -416,6 +420,10 @@ const Table = styled.table`
     &:not(:first-child):hover {
       opacity: 0.6 !important;
     }
+  }
+
+  thead tr {
+    border-bottom: 1px solid #eaecf0 !important;
   }
 `;
 
