@@ -273,16 +273,18 @@ export default function Home() {
               <Spacer y={0.7} />
               <Paragraph>You've joined successfully!</Paragraph>
               <Spacer y={1.5} />
-              <Button
-                onClick={() => {
-                  if (mode === "ar") disconnect();
-                  else disconnectEth();
-                  setJoined(false);
-                  setArSig(undefined);
-                }}
-              >
-                Disconnect
-              </Button>
+              <Buttons>
+                <Button
+                  onClick={() => {
+                    if (mode === "ar") disconnect();
+                    else disconnectEth();
+                    setJoined(false);
+                    setArSig(undefined);
+                  }}
+                >
+                  Disconnect
+                </Button>
+              </Buttons>
             </>
           )}
         </Form>
