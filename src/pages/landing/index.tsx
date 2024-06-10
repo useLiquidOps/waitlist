@@ -18,7 +18,7 @@ import Input from "../../components/Input";
 import Card from "../../components/Card";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
-import { usePrice } from "../../utils/price"
+import { usePrice } from "../../utils/price";
 
 export default function Home() {
   const { connect, disconnect } = useConnection();
@@ -27,9 +27,10 @@ export default function Home() {
   const [email, setEmail] = useState<string | undefined>();
   const strategy = useStrategy();
 
-  const [users, setUsers] = useState<{ address: string; balance: number }[]>(
-    [],
-  );
+  const [users, setUsers] = useState<
+    { address: string; balance: number; usdBalance: number }[]
+  >([]);
+  const [tableLoading, setTableLoading] = useState(true);
 
   const { open } = useWeb3Modal();
   const { address: ethAddr } = useAccount();
@@ -46,11 +47,11 @@ export default function Home() {
   }, [address]);
 
   const arPrice = usePrice("arweave");
-  const ethPrice= usePrice("ethereum");
+  const ethPrice = usePrice("ethereum");
 
   const [stats, setStats] = useState<{
     users: number;
-    arTokens: number
+    arTokens: number;
     total: {
       ar: number;
       eth: number;
@@ -62,8 +63,8 @@ export default function Home() {
     total: {
       ar: 0,
       eth: 0,
-      usdc: 0
-    }
+      usdc: 0,
+    },
   });
 
   const [joined, setJoined] = useState(false);
@@ -100,20 +101,54 @@ export default function Home() {
         typeof res?.users !== "undefined" &&
         typeof res?.arTokens !== "undefined"
       )
-      console.log('here', stats.total.ar * arPrice + stats.total.usdc + stats.total.eth * ethPrice) // do not remove
-        setStats(res);
+        console.log(
+          "here",
+          stats.total.ar * arPrice +
+            stats.total.usdc +
+            stats.total.eth * ethPrice,
+        ); // do not remove
+      setStats(res);
     })();
   }, [joined]);
 
   useEffect(() => {
-    (async () => {
-      const res = await (
-        await fetch("https://waitlist-server.lorimer.pro/get-address-list")
-      ).json();
+    const fetchData = async () => {
+      setTableLoading(true);
 
-      setUsers(res);
-    })();
-  }, [joined]);
+      try {
+        const res = await (
+          await fetch("https://waitlist-server.lorimer.pro/get-address-list")
+        ).json();
+
+        const usersWithUsdBalance = res.map((user: any) => ({
+          ...user,
+          usdBalance:
+            typeof user.balance === "number"
+              ? user.balance * arPrice
+              : Object.entries(user.balance)
+                  .map(
+                    ([token, balance]) =>
+                      (balance as number) * (token === "eth" ? ethPrice : 1),
+                  )
+                  .reduce((curr, acc) => curr + acc, 0),
+        }));
+
+        const sortedList = usersWithUsdBalance.sort(
+          (a: any, b: any) => b.usdBalance - a.usdBalance,
+        );
+
+        const top50Users = sortedList.slice(0, 50);
+
+        setUsers(top50Users);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+
+      setTableLoading(false);
+    };
+
+    fetchData();
+  }, [joined, arPrice, ethPrice]);
 
   const [emailStatus, setEmailStatus] = useState<"error" | undefined>();
   const [loading, setLoading] = useState(false);
@@ -287,7 +322,11 @@ export default function Home() {
             </Stat>
             <Stat>
               <h4>
-                {(stats.total.ar * arPrice + stats.total.usdc + stats.total.eth * ethPrice).toLocaleString(undefined, {
+                {(
+                  stats.total.ar * arPrice +
+                  stats.total.usdc +
+                  stats.total.eth * ethPrice
+                ).toLocaleString(undefined, {
                   style: "currency",
                   currency: "USD",
                   currencyDisplay: "narrowSymbol",
@@ -302,49 +341,61 @@ export default function Home() {
             <thead>
               <tr>
                 <th></th>
-                <th>Address</th>
+                <th>Top 50 Addresses</th>
                 <th>USD Balance</th>
                 <th>Token Balance</th>
               </tr>
             </thead>
             <AnimatePresence>
               <tbody>
-                {users.map((p, i) => (
-                  <motion.tr
-                    initial={{ opacity: 0, scale: 0.93 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.93 }}
-                    key={i}
-                  >
-                    <td>{i + 1}.</td>
-                    <td>{p.address}</td>
-                    <td>
-                      {(typeof p.balance === "number"
-                        ? (p.balance * arPrice) : Object.entries(p.balance).map(([token, balance]) => (balance as number) * (token === "eth" ? ethPrice : 1)).reduce((curr, acc) => curr + acc, 0)).toLocaleString(undefined, {
-                            style: "currency",
-                            currency: "USD",
-                            currencyDisplay: "narrowSymbol",
-                            maximumFractionDigits: 2,
-                          })}
-                        {" USD"}
+                {tableLoading ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      style={{ textAlign: "center", padding: "2rem 0" }}
+                    >
+                      <Spinner />
                     </td>
-                    <td>
-                      {typeof p.balance === "number"
-                        ? p.balance.toLocaleString(undefined, {
-                            maximumFractionDigits: 2,
-                          }) + " AR"
-                        : Object.entries(p.balance)
-                            .map(
-                              ([token, balance]) =>
-                                `${(balance as number).toLocaleString(undefined, {
-                                  maximumFractionDigits:
-                                    token === "eth" ? 4 : 2,
-                                })} ${token.toUpperCase()}`,
-                            )
-                            .join(", ")}
-                    </td>
-                  </motion.tr>
-                ))}
+                  </tr>
+                ) : (
+                  users.map((p, i) => (
+                    <motion.tr
+                      initial={{ opacity: 0, scale: 0.93 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.93 }}
+                      key={i}
+                    >
+                      <td>{i + 1}.</td>
+                      <td>{p.address}</td>
+                      <td>
+                        {p.usdBalance.toLocaleString(undefined, {
+                          style: "currency",
+                          currency: "USD",
+                          currencyDisplay: "narrowSymbol",
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                      <td>
+                        {typeof p.balance === "number"
+                          ? p.balance.toLocaleString(undefined, {
+                              maximumFractionDigits: 2,
+                            }) + " AR"
+                          : Object.entries(p.balance)
+                              .map(
+                                ([token, balance]) =>
+                                  `${(balance as number).toLocaleString(
+                                    undefined,
+                                    {
+                                      maximumFractionDigits:
+                                        token === "eth" ? 4 : 2,
+                                    },
+                                  )} ${token.toUpperCase()}`,
+                              )
+                              .join(", ")}
+                      </td>
+                    </motion.tr>
+                  ))
+                )}
               </tbody>
             </AnimatePresence>
           </Table>
