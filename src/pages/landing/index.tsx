@@ -127,6 +127,7 @@ export default function Home() {
   const [error, setError] = useState<string | undefined>();
 
   async function subscribe() {
+    if (error) setError(undefined);
     if (!address) return;
     if (
       !email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) &&
@@ -184,7 +185,10 @@ export default function Home() {
         ).json();
   
         setJoined(res?.success || false);
-        if (res?.success) setEmail("");
+        if (res?.success) {
+          setEmail("");
+          setError(undefined);
+        }
         else setError(res.message || "Unknown error");
       } catch (e: any) {
         setError(`Error: ${(e?.message || e)}`);
@@ -238,6 +242,16 @@ export default function Home() {
                   </Button>
                 )}
               </Buttons>
+              <AnimatePresence>
+                {error && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <Spacer y={1} />
+                    <ErrorText>
+                      {error}
+                    </ErrorText>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </>
           )) || (
             <>
@@ -433,4 +447,7 @@ const Buttons = styled.div`
 
 const ErrorText = styled(Paragraph)`
   color: #ff0000;
+  background-color: rgba(255, 0, 0, .15);
+  padding: .7rem 1.2rem;
+  border-radius: 15px;
 `;
