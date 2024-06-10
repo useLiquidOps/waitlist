@@ -1,9 +1,8 @@
 import { css } from "@linaria/core";
 import { Route, Switch } from "wouter";
-import Berlin from "./berlin";
-import Home from "./index";
-import Blog from "./blog";
-import Nav from "./Nav";
+import Home from "./pages/landing/index";
+import Blog from "./pages/blog/blog";
+import Nav from "./components/Nav";
 
 export default function App() {
   return (
@@ -12,7 +11,6 @@ export default function App() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/blog" component={Blog} />
-        <Route path="/berlin" component={Berlin} />
       </Switch>
     </>
   );
@@ -27,14 +25,16 @@ export const globals = css`
 
     body {
       margin: 0;
-      font-family: 'Eudoxus Sans', system-ui, sans-serif;
+      font-family: "Eudoxus Sans", system-ui, sans-serif;
       font-weight: 500;
       overflow-x: hidden;
-      background-color: #F5F5F5;
+      background-color: #f5f5f5;
     }
 
-    input, select, textarea {
-      font-family: 'Eudoxus Sans', system-ui, sans-serif !important;
+    input,
+    select,
+    textarea {
+      font-family: "Eudoxus Sans", system-ui, sans-serif !important;
     }
 
     a {
@@ -42,7 +42,7 @@ export const globals = css`
     }
 
     ::selection {
-      background-color: rgba(var(--theme-color), .3);
+      background-color: rgba(var(--theme-color), 0.3);
       color: rgb(var(--theme-color));
     }
   }

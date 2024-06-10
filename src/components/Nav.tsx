@@ -8,10 +8,12 @@ export default function Nav() {
         <Icon src="/logo.png" draggable={false} />
       </Link>
       <Menu>
-        <Link href="/blog">
-          Blog
-        </Link>
-        <a href="https://x.com/OpLiquidity" target="_blank" rel="noopener noreferer">
+        <Link href="/blog">Blog</Link>
+        <a
+          href="https://x.com/OpLiquidity"
+          target="_blank"
+          rel="noopener noreferer"
+        >
           Twitter (now X!)
         </a>
       </Menu>
@@ -27,15 +29,15 @@ const Wrapper = styled.header`
   margin-bottom: 2.6rem;
 
   a {
-    font-size: .95rem;
+    font-size: 0.95rem;
     font-weight: 500;
     color: #404040;
     text-decoration: none;
     cursor: pointer;
-    transition: all .17s ease;
+    transition: all 0.17s ease;
 
     &:hover {
-      opacity: .75;
+      opacity: 0.75;
     }
   }
 

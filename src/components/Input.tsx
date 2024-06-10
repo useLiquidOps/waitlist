@@ -2,7 +2,13 @@ import { HTMLProps, useEffect, useState } from "react";
 import { Mail01 } from "@untitled-ui/icons-react";
 import { styled } from "@linaria/react";
 
-export default function Input({ value, onChange, status, onEnter, ...props }: HTMLProps<HTMLInputElement> & Props) {
+export default function Input({
+  value,
+  onChange,
+  status,
+  onEnter,
+  ...props
+}: HTMLProps<HTMLInputElement> & Props) {
   const [val, setVal] = useState<string | undefined>();
 
   useEffect(() => {
@@ -29,37 +35,38 @@ export default function Input({ value, onChange, status, onEnter, ...props }: HT
           if (e.key !== "Enter" || !onEnter) return;
           onEnter();
         }}
-        {...props as any}
+        {...(props as any)}
       />
     </Wrapper>
   );
 }
 
-const Label = styled.p<{ hasContent: boolean; }>`
+const Label = styled.p<{ hasContent: boolean }>`
   position: absolute;
-  top: ${props => props.hasContent ? "1rem" : "50%"};
+  top: ${(props) => (props.hasContent ? "1rem" : "50%")};
   left: 1.5rem;
-  font-size: ${props => props.hasContent ? ".6rem" : "1rem"};
-  color: #B5B5B5;
+  font-size: ${(props) => (props.hasContent ? ".6rem" : "1rem")};
+  color: #b5b5b5;
   margin: 0;
   font-weight: 500;
-  transform: translateY(${props => props.hasContent ? "0" : "-50%"});
-  transition: all .17s ease;
+  transform: translateY(${(props) => (props.hasContent ? "0" : "-50%")});
+  transition: all 0.17s ease;
 `;
 
-const Wrapper = styled.div<{ error: boolean; }>`
+const Wrapper = styled.div<{ error: boolean }>`
   position: relative;
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
   border-radius: 17px;
   overflow: hidden;
-  transition: all .17s ease;
-  box-shadow: ${props => props.error ? "0 0 0 2px rgb(191, 0, 0)" : "none"};
+  transition: all 0.17s ease;
+  box-shadow: ${(props) => (props.error ? "0 0 0 2px rgb(191, 0, 0)" : "none")};
 
   &:focus-within {
-    box-shadow: 0 0 0 2px rgb(${props => props.error ? "191, 0, 0" : "var(--theme-color)"});
+    box-shadow: 0 0 0 2px
+      rgb(${(props) => (props.error ? "191, 0, 0" : "var(--theme-color)")});
 
     ${Label} {
-      font-size: .6rem;
+      font-size: 0.6rem;
       top: 1rem;
       transform: translateY(0);
     }
@@ -87,12 +94,12 @@ const InputEl = styled.input`
   outline: none;
   width: calc(100% - 3rem);
   z-index: 2;
-  transition: all .17s ease;
+  transition: all 0.17s ease;
 `;
 
 const Icon = styled(Mail01)`
   position: absolute;
-  color: #B5B5B5;
+  color: #b5b5b5;
   top: 50%;
   right: 1.5rem;
   width: 1.5rem;

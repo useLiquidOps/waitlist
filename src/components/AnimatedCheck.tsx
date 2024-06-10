@@ -16,8 +16,8 @@ export default function AnimatedCheck() {
       <motion.path
         d="M6.5 11L9.5 14L15.5 8"
         stroke="currentColor"
-        strokeWidth="1.25" 
-        strokeLinecap="round" 
+        strokeWidth="1.25"
+        strokeLinecap="round"
         strokeLinejoin="round"
         variants={draw}
         custom={1}
@@ -51,9 +51,9 @@ const draw = {
       pathLength: 1,
       opacity: 1,
       transition: {
-        pathLength: { delay, type: "spring", duration: .42, bounce: 0 },
-        opacity: { delay, duration: .01 }
-      }
+        pathLength: { delay, type: "spring", duration: 0.42, bounce: 0 },
+        opacity: { delay, duration: 0.01 },
+      },
     };
-  }
+  },
 };
