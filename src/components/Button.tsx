@@ -29,8 +29,8 @@ const Button = styled.button<{
 
   &:hover:not(:active):not(:disabled) {
     transform: translate3d(0px, -1.4px, 0px);
-    box-shadow: 0px 0px 2px
-        rgba(${(props) => props.color || "var(--theme-color)"}, 0.15),
+    box-shadow:
+      0px 0px 2px rgba(${(props) => props.color || "var(--theme-color)"}, 0.15),
       0px 4px 7px rgba(${(props) => props.color || "var(--theme-color)"}, 0.05),
       0px 12px 40px rgba(${(props) => props.color || "var(--theme-color)"}, 0.1);
   }

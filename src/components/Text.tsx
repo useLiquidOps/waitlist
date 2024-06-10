@@ -18,7 +18,7 @@ export const SectionTitle = styled.h3`
 
 export const Paragraph = styled.p`
   text-align: center;
-  color: #B5B5B5;
+  color: #b5b5b5;
   width: 30vw;
   line-height: 1.45em;
   margin: 0 auto;
