@@ -48,9 +48,22 @@ export default function Home() {
   const arPrice = usePrice("arweave");
   const ethPrice= usePrice("ethereum");
 
-  const [stats, setStats] = useState<{ users: number; arTokens: number }>({
+  const [stats, setStats] = useState<{
+    users: number;
+    arTokens: number
+    total: {
+      ar: number;
+      eth: number;
+      usdc: number;
+    };
+  }>({
     users: 0,
     arTokens: 0,
+    total: {
+      ar: 0,
+      eth: 0,
+      usdc: 0
+    }
   });
 
   const [joined, setJoined] = useState(false);
@@ -273,7 +286,7 @@ export default function Home() {
             </Stat>
             <Stat>
               <h4>
-                {(stats.arTokens * arPrice).toLocaleString(undefined, {
+                {(stats.total.ar * arPrice + stats.total.usdc + stats.total.eth * ethPrice).toLocaleString(undefined, {
                   style: "currency",
                   currency: "USD",
                   currencyDisplay: "narrowSymbol",
