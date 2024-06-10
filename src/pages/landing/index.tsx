@@ -205,8 +205,9 @@ export default function Home() {
           <SectionTitle>Join the waitlist!</SectionTitle>
           <Spacer y={0.6} />
           <Paragraph>
-            Subscribe to our newsletter to know when we are ready. Don't worry,
-            we won't spam you!
+            Connect your wallet to be added to our wait list leader board and be notified when we launch.
+            
+            Don't worry, we won't spam you!
           </Paragraph>
           {(!joined && (
             <>
@@ -233,14 +234,6 @@ export default function Home() {
                   </Button>
                 )}
               </Buttons>
-              {connected && !joined && (
-                <>
-                  <Spacer y={1} />
-                  <Paragraph>
-                    You will need to sign your wallet address, so we can verify it.
-                  </Paragraph>
-                </>
-              )}
             </>
           )) || (
             <>
