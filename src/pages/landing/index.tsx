@@ -156,7 +156,8 @@ export default function Home() {
       } else {
         signMsgEth({ message: address })
       }
-    } catch {
+    } catch (e: any) {
+      setError(e?.message || "Unknown error")
       setLoading(false);
     }
   }
@@ -191,7 +192,7 @@ export default function Home() {
         }
         else setError(res.message || "Unknown error");
       } catch (e: any) {
-        setError(`Error: ${(e?.message || e)}`);
+        setError(e?.message || "Unknown error");
       }
 
       setLoading(false);
@@ -247,6 +248,8 @@ export default function Home() {
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                     <Spacer y={1} />
                     <ErrorText>
+                      Error:
+                      {" "}
                       {error}
                       {" "}
                       <u
@@ -460,6 +463,7 @@ const ErrorText = styled(Paragraph)`
   background-color: rgba(255, 0, 0, .15);
   padding: .7rem 1.2rem;
   border-radius: 15px;
+  text-align: left;
 
   u {
     cursor: pointer;
