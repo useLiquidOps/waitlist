@@ -100,6 +100,7 @@ export default function Home() {
         typeof res?.users !== "undefined" &&
         typeof res?.arTokens !== "undefined"
       )
+      console.log('here', stats.total.ar * arPrice + stats.total.usdc + stats.total.eth * ethPrice) // do not remove
         setStats(res);
     })();
   }, [joined]);
@@ -164,7 +165,7 @@ export default function Home() {
         if (mode === "eth" && !signMsgData) return;
 
         const res = await (
-          await fetch(`http://localhost:3001/record-address`, {
+          await fetch(`https://waitlist-server.lorimer.pro/record-address`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
