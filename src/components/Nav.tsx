@@ -26,7 +26,7 @@ const Wrapper = styled.header`
   align-items: center;
   justify-content: space-between;
   padding: 1.4rem 4.5rem;
-  margin-bottom: 2.6rem;
+  margin-bottom: 1rem;
 
   a {
     font-size: 0.95rem;

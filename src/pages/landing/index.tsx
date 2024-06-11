@@ -313,7 +313,6 @@ export default function Home() {
             </>
           )}
         </Form>
-        <Spacer y={0.01} />
         <Leaderboard>
           <Stats>
             <Stat>
