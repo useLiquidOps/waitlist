@@ -20,7 +20,7 @@ export default function Input({
     <Wrapper error={status == "error"}>
       <Content>
         <Label hasContent={typeof val !== "undefined" && val !== ""}>
-          Your email (Not required)
+          Your email (Optional)
         </Label>
         <Icon />
       </Content>
