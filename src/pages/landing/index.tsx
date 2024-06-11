@@ -433,6 +433,10 @@ const Stats = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   border-bottom: 1px solid #eaecf0;
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Stat = styled.div`
@@ -444,6 +448,13 @@ const Stat = styled.div`
 
   &:first-child {
     border-right: 1px solid #eaecf0;
+  }
+
+  @media screen and (max-width: 1000px) {
+    &:first-child {
+      border-bottom: 1px solid #eaecf0;
+      border-right: none;
+    }
   }
 
   h4 {
