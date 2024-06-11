@@ -519,6 +519,10 @@ const Buttons = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1rem;
+
+  @media screen and (max-width: 720px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const ErrorText = styled(Paragraph)`
