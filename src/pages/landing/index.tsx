@@ -425,6 +425,7 @@ const Leaderboard = styled(Card)`
 
   @media screen and (max-width: 720px) {
     width: 100%;
+    overflow-x: auto;
   }
 `;
 
