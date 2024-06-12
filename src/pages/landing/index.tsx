@@ -197,7 +197,7 @@ export default function Home() {
       try {
         if (!mode || !address) return;
         if (mode === "ar" && (!arSig || !publicKey)) return;
-        // if (mode === "eth" && !signMsgData) return;
+        if (mode === "eth" && !signMsgData) return;
 
         const res = await (
           await fetch(`https://waitlist-server.lorimer.pro/record-address`, {
