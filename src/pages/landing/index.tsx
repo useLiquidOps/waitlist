@@ -18,7 +18,7 @@ import Input from "../../components/Input";
 import Card from "../../components/Card";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
-import { usePrice } from "../../utils/price";
+import { assets, usePrice } from "../../utils/price";
 
 export default function Home() {
   const { connect, disconnect } = useConnection();
@@ -27,9 +27,6 @@ export default function Home() {
   const [email, setEmail] = useState<string | undefined>();
   const strategy = useStrategy();
 
-  const [users, setUsers] = useState<
-    { address: string; balance: number; usdBalance: number }[]
-  >([]);
   const [tableLoading, setTableLoading] = useState(true);
 
   const { open } = useWeb3Modal();
@@ -46,8 +43,7 @@ export default function Home() {
     return address.length === 42 ? "eth" : "ar";
   }, [address]);
 
-  const arPrice = usePrice("arweave");
-  const ethPrice = usePrice("ethereum");
+  const prices = usePrice();
 
   const [stats, setStats] = useState<{
     users: number;
@@ -103,13 +99,47 @@ export default function Home() {
       )
         console.log(
           "here",
-          stats.total.ar * arPrice +
-            stats.total.usdc +
-            stats.total.eth * ethPrice,
+          //stats.total.ar * arPrice +
+            stats.total.usdc //+
+            //stats.total.eth * ethPrice,
         ); // do not remove
       setStats(res);
     })();
   }, [joined]);
+
+  const [rawUsers, setRawUsers] = useState<{
+    address: string;
+    balance: number;
+    evmBalances?: {
+      blockchain: string;
+      tokenSymbol: string;
+      contractAddress: null | string;
+      balance: string;
+      thumbnail: string;
+    }[];
+  }[]>();
+
+  const users = useMemo(() => {
+    if (!rawUsers) return [];
+    return rawUsers.map(({ address, balance, evmBalances }) => {
+      const supportedBalances = evmBalances?.filter(({ tokenSymbol }) => Object.keys(assets).includes(tokenSymbol));
+      const formatBal = (bal: number) => bal.toLocaleString(undefined, { maximumFractionDigits: 2 });
+
+      return {
+        address,
+        usdBalance: supportedBalances ? supportedBalances
+          .map(({ balance, tokenSymbol }) => parseFloat(balance) * prices[Object.keys(assets).find(
+              // @ts-expect-error
+              (key) => assets[key] === tokenSymbol.toLowerCase()) 
+            || ""]?.usd || 0)
+          : balance * prices.arweave?.usd,
+        balance: supportedBalances ? supportedBalances
+          .map(({ balance, tokenSymbol }) => formatBal(parseFloat(balance)) + " " + tokenSymbol.toUpperCase())
+          .join(", ")
+          : (formatBal(balance) + " AR")
+      }
+    });
+  }, [prices, rawUsers]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -117,29 +147,10 @@ export default function Home() {
 
       try {
         const res = await (
-          await fetch("https://waitlist-server.lorimer.pro/get-address-list")
+          await fetch("http://localhost:3001/get-address-list")
         ).json();
 
-        const usersWithUsdBalance = res.map((user: any) => ({
-          ...user,
-          usdBalance:
-            typeof user.balance === "number"
-              ? user.balance * arPrice
-              : Object.entries(user.balance)
-                  .map(
-                    ([token, balance]) =>
-                      (balance as number) * (token === "eth" ? ethPrice : 1),
-                  )
-                  .reduce((curr, acc) => curr + acc, 0),
-        }));
-
-        const sortedList = usersWithUsdBalance.sort(
-          (a: any, b: any) => b.usdBalance - a.usdBalance,
-        );
-
-        const top50Users = sortedList.slice(0, 50);
-
-        setUsers(top50Users);
+        setRawUsers(res.userList);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -148,7 +159,7 @@ export default function Home() {
     };
 
     fetchData();
-  }, [joined, arPrice, ethPrice]);
+  }, [joined]);
 
   const [emailStatus, setEmailStatus] = useState<"error" | undefined>();
   const [loading, setLoading] = useState(false);
@@ -322,9 +333,9 @@ export default function Home() {
             <Stat>
               <h4>
                 {(
-                  stats.total.ar * arPrice +
+                  stats.total.ar * prices["arweave"]?.usd +
                   stats.total.usdc +
-                  stats.total.eth * ethPrice
+                  stats.total.eth * prices["ethereum"]?.usd
                 ).toLocaleString(undefined, {
                   style: "currency",
                   currency: "USD",
@@ -375,22 +386,7 @@ export default function Home() {
                         })}
                       </td>
                       <td>
-                        {typeof p.balance === "number"
-                          ? p.balance.toLocaleString(undefined, {
-                              maximumFractionDigits: 2,
-                            }) + " AR"
-                          : Object.entries(p.balance)
-                              .map(
-                                ([token, balance]) =>
-                                  `${(balance as number).toLocaleString(
-                                    undefined,
-                                    {
-                                      maximumFractionDigits:
-                                        token === "eth" ? 4 : 2,
-                                    },
-                                  )} ${token.toUpperCase()}`,
-                              )
-                              .join(", ")}
+                        {p.balance}
                       </td>
                     </motion.tr>
                   ))
