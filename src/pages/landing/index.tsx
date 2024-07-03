@@ -107,38 +107,54 @@ export default function Home() {
     })();
   }, [joined]);
 
+  interface EvmBalance {
+    blockchain: string;
+    tokenSymbol: string;
+    contractAddress: null | string;
+    balance: string;
+    thumbnail: string;
+  }
+
   const [rawUsers, setRawUsers] = useState<{
     address: string;
     balance: number;
-    evmBalances?: {
-      blockchain: string;
-      tokenSymbol: string;
-      contractAddress: null | string;
-      balance: string;
-      thumbnail: string;
-    }[];
+    evmBalances?: EvmBalance[];
   }[]>();
 
   const users = useMemo(() => {
     if (!rawUsers) return [];
-    return rawUsers.map(({ address, balance, evmBalances }) => {
-      const supportedBalances = evmBalances?.filter(({ tokenSymbol }) => Object.keys(assets).includes(tokenSymbol));
-      const formatBal = (bal: number) => bal.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    const formatBal = (bal: number) => bal.toLocaleString(undefined, { maximumFractionDigits: 2 });
 
-      return {
-        address,
-        usdBalance: supportedBalances ? supportedBalances
-          .map(({ balance, tokenSymbol }) => parseFloat(balance) * prices[Object.keys(assets).find(
-              // @ts-expect-error
-              (key) => assets[key] === tokenSymbol.toLowerCase()) 
-            || ""]?.usd || 0)
-          : balance * prices.arweave?.usd,
-        balance: supportedBalances ? supportedBalances
-          .map(({ balance, tokenSymbol }) => formatBal(parseFloat(balance)) + " " + tokenSymbol.toUpperCase())
-          .join(", ")
-          : (formatBal(balance) + " AR")
-      }
-    });
+    return rawUsers
+      .map(({ address, balance, evmBalances }) => {
+        const supportedBalances: EvmBalance[] | undefined = evmBalances?.filter(({ tokenSymbol }) => Object.values(assets).includes(tokenSymbol.toLowerCase()));
+
+        return {
+          address,
+          usdBalance: supportedBalances && address.startsWith("0x") ? supportedBalances
+            .map(({ balance, tokenSymbol }) => parseFloat(balance) * prices[Object.keys(assets).find(
+                // @ts-expect-error
+                (key) => assets[key] === tokenSymbol.toLowerCase()) 
+              || ""]?.usd || 0)
+            .reduce((prev, curr) => prev + curr, 0)
+            : (typeof balance === "number" ? balance : 0) * prices.arweave?.usd,
+          balance: supportedBalances && address.startsWith("0x") ? supportedBalances
+            .reduce((prev, curr) => {
+              const i = prev.findIndex((v) => v.tokenSymbol.toLowerCase() === curr.tokenSymbol.toLowerCase());
+
+              if (i >= 0) prev[i].balance = (parseFloat(prev[i].balance) + parseFloat(curr.balance)).toString();
+              else prev.push(curr);
+
+              return prev;
+            }, [] as EvmBalance[])
+            .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance))
+            .slice(0, 2)
+            .map(({ balance, tokenSymbol }) => formatBal(parseFloat(balance)) + " " + tokenSymbol.toUpperCase())
+            .join(", ")
+            : (formatBal(typeof balance === "number" ? balance : 0) + " AR")
+        }
+      })
+      .sort((a, b) => b.usdBalance - a.usdBalance);
   }, [prices, rawUsers]);
 
   useEffect(() => {
@@ -147,7 +163,7 @@ export default function Home() {
 
       try {
         const res = await (
-          await fetch("http://localhost:3001/get-address-list")
+          await fetch("https://waitlist-server.lorimer.pro/get-address-list")
         ).json();
 
         setRawUsers(res.userList);
@@ -332,11 +348,7 @@ export default function Home() {
             </Stat>
             <Stat>
               <h4>
-                {(
-                  stats.total.ar * prices["arweave"]?.usd +
-                  stats.total.usdc +
-                  stats.total.eth * prices["ethereum"]?.usd
-                ).toLocaleString(undefined, {
+                {users.reduce((prev, curr) => prev + (curr.usdBalance || 0), 0).toLocaleString(undefined, {
                   style: "currency",
                   currency: "USD",
                   currencyDisplay: "narrowSymbol",

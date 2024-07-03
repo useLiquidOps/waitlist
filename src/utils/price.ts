@@ -6,10 +6,12 @@ export const assets = {
   "matic-network": "matic",
   binancecoin: "bnb",
   "avalanche-2": "avax",
-  bitcoin: "btc",
   optimism: "op",
   tether: "usdt",
-  "usd-coin": "usdc"
+  "usd-coin": "usdc",
+  "dai": "dai",
+  "weth": "weth",
+  "wrapped-bitcoin": "wbtc"
 };
 
 export function usePrice() {
