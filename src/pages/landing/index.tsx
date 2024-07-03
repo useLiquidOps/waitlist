@@ -45,24 +45,6 @@ export default function Home() {
 
   const prices = usePrice();
 
-  const [stats, setStats] = useState<{
-    users: number;
-    arTokens: number;
-    total: {
-      ar: number;
-      eth: number;
-      usdc: number;
-    };
-  }>({
-    users: 0,
-    arTokens: 0,
-    total: {
-      ar: 0,
-      eth: 0,
-      usdc: 0,
-    },
-  });
-
   const [joined, setJoined] = useState(false);
 
   useEffect(() => {
@@ -87,25 +69,6 @@ export default function Home() {
     })();
   }, [address]);
 
-  useEffect(() => {
-    (async () => {
-      const res = await (
-        await fetch("https://waitlist-server.lorimer.pro/waitlist-stats")
-      ).json();
-
-      if (
-        typeof res?.users !== "undefined" &&
-        typeof res?.arTokens !== "undefined"
-      )
-        console.log(
-          "here",
-          //stats.total.ar * arPrice +
-            stats.total.usdc //+
-            //stats.total.eth * ethPrice,
-        ); // do not remove
-      setStats(res);
-    })();
-  }, [joined]);
 
   interface EvmBalance {
     blockchain: string;
@@ -343,7 +306,7 @@ export default function Home() {
         <Leaderboard>
           <Stats>
             <Stat>
-              <h4>{stats.users.toLocaleString()}</h4>
+              <h4>{users.length.toLocaleString()}</h4>
               <Paragraph>Wait list sign ups</Paragraph>
             </Stat>
             <Stat>
