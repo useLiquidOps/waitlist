@@ -343,7 +343,7 @@ export default function Home() {
                     </td>
                   </tr>
                 ) : (
-                  users.map((p, i) => (
+                  users.slice(0, 50).map((p, i) => (
                     <motion.tr
                       initial={{ opacity: 0, scale: 0.93 }}
                       animate={{ opacity: 1, scale: 1 }}
