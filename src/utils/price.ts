@@ -1,32 +1,42 @@
 import { useEffect, useState } from "react";
 
-export function usePrice(symbol: string) {
-  const [price, setPrice] = useState(0);
+export const assets = {
+  arweave: "ar",
+  ethereum: "eth",
+  "matic-network": "matic",
+  binancecoin: "bnb",
+  "avalanche-2": "avax",
+  optimism: "op",
+  tether: "usdt",
+  "usd-coin": "usdc",
+  "dai": "dai",
+  "weth": "weth",
+  "wrapped-bitcoin": "wbtc"
+};
+
+export function usePrice() {
+  const [price, setPrice] = useState<{ [id: string]: { usd: number } }>({});
 
   useEffect(() => {
     (async () => {
-      const storage = symbol + "_price_cache";
+      const storage = "price_cache";
 
       try {
         const res = await (
           await fetch(
-            `https://api.coingecko.com/api/v3/simple/price?ids=${symbol}&vs_currencies=usd`,
+            `https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(assets).join(",")}&vs_currencies=usd`,
           )
         ).json();
 
-        if (!res?.[symbol]?.usd) {
-          throw new Error("");
-        }
-
-        localStorage.setItem(storage, res[symbol].usd.toString());
-        setPrice(res[symbol].usd);
+        localStorage.setItem(storage, JSON.stringify(res));
+        setPrice(res);
       } catch {
         const cached = localStorage.getItem(storage);
 
-        setPrice(cached ? parseFloat(cached) : 0);
+        setPrice(cached ? JSON.parse(cached) : {});
       }
     })();
-  }, [symbol]);
+  }, []);
 
   return price;
 }
