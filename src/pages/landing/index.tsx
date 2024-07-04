@@ -248,7 +248,7 @@ export default function Home() {
               <Buttons>
                 {(!connected && (
                   <>
-                    <Button onClick={() => connect()}>ArConnect</Button>
+                    <Button onClick={() => connect()}>Arweave Wallet Kit</Button>
                     <Button onClick={() => open()}>Wallet Connect</Button>
                   </>
                 )) || (
