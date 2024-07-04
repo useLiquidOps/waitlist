@@ -248,8 +248,8 @@ export default function Home() {
               <Buttons>
                 {(!connected && (
                   <>
-                    <Button onClick={() => connect()}>Arweave wallet</Button>
-                    <Button onClick={() => open()}>Ethereum wallet</Button>
+                    <Button onClick={() => connect()}>ArConnect</Button>
+                    <Button onClick={() => open()}>Wallet Connect</Button>
                   </>
                 )) || (
                   <Button onClick={() => subscribe()}>
