@@ -1,7 +1,6 @@
 import { css } from "@linaria/core";
 import { Route, Switch } from "wouter";
 import Home from "./pages/landing/index";
-import Blog from "./pages/blog/blog";
 import Nav from "./components/Nav";
 
 export default function App() {
@@ -10,7 +9,6 @@ export default function App() {
       <Nav />
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/blog" component={Blog} />
       </Switch>
     </>
   );
@@ -20,7 +18,7 @@ export const globals = css`
   :global() {
     html {
       box-sizing: border-box;
-      --theme-color: 0, 10, 255;
+      --theme-color: 72, 68, 236
     }
 
     body {
