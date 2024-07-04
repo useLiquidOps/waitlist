@@ -225,7 +225,7 @@ export default function Home() {
           <Title>LiquidOps Waitlist</Title>
           <Spacer y={0.4} />
           <Paragraph>
-            LiquidOps is the very first lending protocol on arweave
+            The very first lending protocol on arweave
             and the ao computer
           </Paragraph>
         </div>
@@ -248,8 +248,8 @@ export default function Home() {
               <Buttons>
                 {(!connected && (
                   <>
-                    <Button onClick={() => connect()}>Arweave Wallet Kit</Button>
-                    <Button onClick={() => open()}>Wallet Connect</Button>
+                    <Button style={{'backgroundColor': '#191994'}} onClick={() => connect()}>Arweave Wallet Kit</Button>
+                    <Button style={{'backgroundColor': '#4844ec'}} onClick={() => open()}>Wallet Connect</Button>
                   </>
                 )) || (
                   <Button onClick={() => subscribe()}>
