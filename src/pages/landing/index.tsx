@@ -222,10 +222,10 @@ export default function Home() {
     <>
       <Wrapper>
         <div>
-          <Title>Operation Liquidity</Title>
+          <Title>LiquidOps Waitlist</Title>
           <Spacer y={0.4} />
           <Paragraph>
-            Operation Liquidity is the very first lending protocol on arweave
+            LiquidOps is the very first lending protocol on arweave
             and the ao computer
           </Paragraph>
         </div>
