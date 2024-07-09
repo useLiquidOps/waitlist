@@ -5,16 +5,25 @@ export default function Nav() {
   return (
     <Wrapper>
       <Link href="/">
-        <Icon src="/logo.png" draggable={false} />
+        <Icon src="/logo.svg" draggable={false} />
       </Link>
       <Menu>
-        <Link href="/blog">Blog</Link>
+      <a
+          href="https://liquidops.io"
+        >
+          Home
+        </a>
         <a
-          href="https://x.com/OpLiquidity"
+          href="https://liquidops.io/blog"
+        >
+          Blog
+        </a>
+        <a
+          href="https://x.com/Liquid_Ops"
           target="_blank"
           rel="noopener noreferer"
         >
-          Twitter (now X!)
+          X
         </a>
       </Menu>
     </Wrapper>
@@ -47,8 +56,7 @@ const Wrapper = styled.header`
 `;
 
 const Icon = styled.img`
-  width: 2.2rem;
-  height: 2.2rem;
+  height: 32px;
   object-fit: contain;
   user-select: none;
 `;

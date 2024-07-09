@@ -19,6 +19,7 @@ import Card from "../../components/Card";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import { assets, usePrice } from "../../utils/price";
+import { Plus } from "@untitled-ui/icons-react"
 
 export default function Home() {
   const { connect, disconnect } = useConnection();
@@ -111,10 +112,8 @@ export default function Home() {
               return prev;
             }, [] as EvmBalance[])
             .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance))
-            .slice(0, 2)
             .map(({ balance, tokenSymbol }) => formatBal(parseFloat(balance)) + " " + tokenSymbol.toUpperCase())
-            .join(", ")
-            : (formatBal(typeof balance === "number" ? balance : 0) + " AR")
+            : [formatBal(typeof balance === "number" ? balance : 0) + " AR"]
         }
       })
       .sort((a, b) => b.usdBalance - a.usdBalance);
@@ -222,10 +221,10 @@ export default function Home() {
     <>
       <Wrapper>
         <div>
-          <Title>Operation Liquidity</Title>
+          <Title>LiquidOps Waitlist</Title>
           <Spacer y={0.4} />
           <Paragraph>
-            Operation Liquidity is the very first lending protocol on arweave
+            The very first lending protocol on arweave
             and the ao computer
           </Paragraph>
         </div>
@@ -248,8 +247,8 @@ export default function Home() {
               <Buttons>
                 {(!connected && (
                   <>
-                    <Button onClick={() => connect()}>Arweave wallet</Button>
-                    <Button onClick={() => open()}>Ethereum wallet</Button>
+                    <Button style={{'backgroundColor': '#191994'}} onClick={() => connect()}>Arweave Wallet Kit</Button>
+                    <Button style={{'backgroundColor': '#4844ec'}} onClick={() => open()}>Wallet Connect</Button>
                   </>
                 )) || (
                   <Button onClick={() => subscribe()}>
@@ -360,8 +359,20 @@ export default function Home() {
                           maximumFractionDigits: 2,
                         })}
                       </td>
-                      <td>
-                        {p.balance}
+                      <td style={{ display: "flex", gap: ".4rem", alignItems: "center", justifyContent: "flex-end" }}>
+                        {p.balance.slice(0, 2).join(", ")}
+                        {p.balance.length > 2 && (
+                          <MoreBalanceWrapper>
+                            <MoreBalance>
+                              <Plus />
+                            </MoreBalance>
+                            <Balances>
+                              {p.balance.slice(2).map((balance, i) => (
+                                <span key={i}>{balance}</span>
+                              ))}
+                            </Balances>
+                          </MoreBalanceWrapper>
+                        )}
                       </td>
                     </motion.tr>
                   ))
@@ -505,5 +516,55 @@ const ErrorText = styled(Paragraph)`
 
   u {
     cursor: pointer;
+  }
+`;
+
+const Balances = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, .95);
+  border-radius: 18px;
+  padding: .3rem;
+  opacity: 0;
+  width: max-content;
+  z-index: -2;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  transition: all .23s ease-in-out;
+
+  span {
+    color: #fff;
+  }
+`;
+
+const MoreBalanceWrapper = styled.div`
+  position: relative;
+  z-index: 1;
+  display: flex;
+
+  &:hover ${Balances} {
+    z-index: 100;
+    opacity: 1;
+  }
+`;
+
+const MoreBalance = styled.div`
+  position: relative;
+  background-color: rgb(var(--theme-color));
+  color: #fff;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 75%;
+    height: 75%;
+    transform: translate(-50%, -50%);
   }
 `;
