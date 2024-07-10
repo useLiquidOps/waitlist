@@ -55,7 +55,7 @@ export default function Home() {
       }
 
       const res = await (
-        await fetch(`https://waitlist-server.lorimer.pro/check-address`, {
+        await fetch(`https://waitlist-server.liquidops.io/check-address`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -125,7 +125,7 @@ export default function Home() {
 
       try {
         const res = await (
-          await fetch("https://waitlist-server.lorimer.pro/get-address-list")
+          await fetch("https://waitlist-server.liquidops.io/get-address-list")
         ).json();
 
         setRawUsers(res.userList);
@@ -189,7 +189,7 @@ export default function Home() {
         if (mode === "eth" && !signMsgData) return;
 
         const res = await (
-          await fetch(`https://waitlist-server.lorimer.pro/record-address`, {
+          await fetch(`https://waitlist-server.liquidops.io/record-address`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
