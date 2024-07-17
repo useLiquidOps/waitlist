@@ -11,7 +11,8 @@ export const assets = {
   "usd-coin": "usdc",
   "dai": "dai",
   "weth": "weth",
-  "wrapped-bitcoin": "wbtc"
+  "wrapped-bitcoin": "wbtc",
+  "havven": "snx"
 };
 
 export function usePrice() {
@@ -27,6 +28,8 @@ export function usePrice() {
             `https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(assets).join(",")}&vs_currencies=usd`,
           )
         ).json();
+
+        console.log(res)
 
         localStorage.setItem(storage, JSON.stringify(res));
         setPrice(res);
