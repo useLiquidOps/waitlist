@@ -12,7 +12,9 @@ export const assets = {
   "dai": "dai",
   "weth": "weth",
   "wrapped-bitcoin": "wbtc",
-  "havven": "snx"
+  "havven": "snx",
+  eigen: "eigen",
+  stakedAave: 'aave'
 };
 
 export function usePrice() {
