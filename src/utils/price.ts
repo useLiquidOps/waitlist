@@ -14,7 +14,8 @@ export const assets = {
   "wrapped-bitcoin": "wbtc",
   "havven": "snx",
   eigen: "eigen",
-  aave: 'STKAAVE'
+  aave: 'stkaave',
+  "lido-dao": 'lido'
 };
 
 export function usePrice() {
