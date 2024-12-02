@@ -14,7 +14,7 @@ export const assets = {
   "wrapped-bitcoin": "wbtc",
   "havven": "snx",
   eigen: "eigen",
-  aave: 'aave'
+  aave: 'STKAAVE'
 };
 
 export function usePrice() {
