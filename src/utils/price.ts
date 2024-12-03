@@ -15,7 +15,8 @@ export const assets = {
   "havven": "snx",
   eigen: "eigen",
   aave: 'stkaave',
-  "lido-dao": 'lido'
+  "lido-dao": 'lido',
+  "curve-dao-token": "crv"
 };
 
 export function usePrice() {
